@@ -24,7 +24,7 @@ Document de suivi du développement, découpé en tâches fines et guidées. Obj
 
 ### Règles transverses (invariants — valables sur TOUTES les tâches)
 
-1. **Deux couches de données.** *Canonique* (importée, read-only, réécrite à chaque import) vs *augmentation* (éditée dans l'app). Un import **n'écrase jamais** l'augmentation.
+1. **Deux couches de données.** _Canonique_ (importée, read-only, réécrite à chaque import) vs _augmentation_ (éditée dans l'app). Un import **n'écrase jamais** l'augmentation.
 2. **Cloisonnement.** Toute donnée métier porte un `project_id` ; un projet appartient à un `space`. Toute requête est filtrée par l'espace/projet courant de l'utilisateur.
 3. **Idempotence de l'import.** Upsert par clé `(source, external_id)` ; rejouer un import ne crée pas de doublon.
 4. **Historisation.** Les changements de champs significatifs vont dans `change_log` ; les métriques calculées sont figées dans `metric_snapshot` à chaque import.
@@ -63,14 +63,16 @@ npm run db:seed      # jeu de données factice (fixtures)
 But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.1 — Créer le projet Nuxt 4
-- [ ] **Objectif** : initialiser Nuxt 4 en TypeScript strict.
+
+- [x] **Objectif** : initialiser Nuxt 4 en TypeScript strict.
 - **Fichiers** : `nuxt.config.ts`, `tsconfig.json`, `package.json`.
 - **DoD** :
-  - [ ] `npm run dev` démarre et affiche la page d'accueil sur `http://localhost:3000`.
-  - [ ] `compatibilityDate` fixée, `typescript.strict: true`, version Nuxt **épinglée** + lockfile committé.
+  - [x] `npm run dev` démarre et affiche la page d'accueil sur `http://localhost:3000`.
+  - [x] `compatibilityDate` fixée, `typescript.strict: true`, version Nuxt **épinglée** + lockfile committé.
 - **Taille** : S · ❓ version (voir Points d'attention).
 
 ### 0.2 — Tailwind 4 + DaisyUI 5
+
 - [ ] **Objectif** : intégrer Tailwind 4 et DaisyUI 5, config en CSS.
 - **Fichiers** : `app/assets/css/main.css`, `nuxt.config.ts`.
 - **DoD** :
@@ -80,6 +82,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : S · ⚠️ dép. 0.1.
 
 ### 0.3 — Biome + scripts npm
+
 - [ ] **Objectif** : lint/format cohérent.
 - **Fichiers** : `biome.json`, `package.json`.
 - **DoD** :
@@ -88,6 +91,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : XS.
 
 ### 0.4 — Drizzle + better-sqlite3
+
 - [ ] **Objectif** : connexion SQLite typée + workflow de migration.
 - **Fichiers** : `drizzle.config.ts`, `server/utils/db.ts`, `server/db/schema/index.ts`, `package.json`.
 - **DoD** :
@@ -97,6 +101,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : M · ⚠️ dép. 0.1.
 
 ### 0.5 — Structure de dossiers (hexagonale)
+
 - [ ] **Objectif** : poser l'arborescence et les conventions.
 - **Fichiers** : dossiers `server/domain/`, `server/application/`, `server/adapters/`, `server/db/schema/`, `server/api/`, `app/`.
 - **DoD** :
@@ -105,6 +110,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : S · ⚠️ dép. 0.1.
 
 ### 0.6 — Vitest
+
 - [ ] **Objectif** : tests unitaires purs pour le domaine.
 - **Fichiers** : `vitest.config.ts`, `server/domain/__tests__/smoke.test.ts`.
 - **DoD** :
@@ -112,6 +118,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : XS · ⚠️ dép. 0.5.
 
 ### 0.7 — Layout de base (sidebar + navbar)
+
 - [ ] **Objectif** : coquille de l'app navigable.
 - **Fichiers** : `app/layouts/default.vue`, `app/components/layout/Sidebar.vue`, `app/components/layout/Navbar.vue`.
 - **DoD** :
@@ -121,6 +128,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 - **Taille** : M · ⚠️ dép. 0.2.
 
 ### 0.8 — Wrapper ApexCharts + helper de thème
+
 - [ ] **Objectif** : graphes prêts à l'emploi, thémés DaisyUI.
 - **Fichiers** : `app/components/charts/BaseChart.client.vue`, `app/composables/useChartTheme.ts`.
 - **DoD** :
@@ -135,6 +143,7 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.1 — Schéma : identité & RBAC
+
 - [ ] **Objectif** : tables d'identité et de rôles.
 - **Fichiers** : `server/db/schema/identity.ts`.
 - **DoD** :
@@ -144,6 +153,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 0.4.
 
 ### 1.2 — Auth (sessions + hash)
+
 - [ ] **Objectif** : brancher `nuxt-auth-utils` et le hachage de mot de passe.
 - **Fichiers** : `nuxt.config.ts`, `server/utils/password.ts`, `.env`.
 - **DoD** :
@@ -152,6 +162,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : S · ⚠️ dép. 1.1.
 
 ### 1.3 — Premier lancement (setup admin) + seed rôles
+
 - [ ] **Objectif** : bootstrap du premier administrateur.
 - **Fichiers** : `server/api/setup.post.ts`, `app/pages/setup.vue`, `server/utils/roles.ts`.
 - **DoD** :
@@ -160,6 +171,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 1.2.
 
 ### 1.4 — Login / logout
+
 - [ ] **Objectif** : authentification classique.
 - **Fichiers** : `server/api/auth/login.post.ts`, `server/api/auth/logout.post.ts`, `app/pages/login.vue`.
 - **DoD** :
@@ -168,6 +180,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : S · ⚠️ dép. 1.2.
 
 ### 1.5 — Middleware d'auth + scoping espace
+
 - [ ] **Objectif** : protéger les routes et cadrer l'espace courant.
 - **Fichiers** : `app/middleware/auth.global.ts`, `server/utils/context.ts`.
 - **DoD** :
@@ -176,6 +189,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 1.4.
 
 ### 1.6 — Espaces : CRUD + sélecteur
+
 - [ ] **Objectif** : gérer et changer d'espace.
 - **Fichiers** : `server/api/spaces/*`, `app/components/layout/SpaceSwitcher.vue`.
 - **DoD** :
@@ -184,6 +198,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 1.5.
 
 ### 1.7 — Utilisateurs de l'espace (création par l'admin)
+
 - [ ] **Objectif** : ajouter des membres sans email (MVP).
 - **Fichiers** : `server/api/spaces/[id]/members/*`, `app/pages/parametres/membres.vue`.
 - **DoD** :
@@ -192,6 +207,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 1.6.
 
 ### 1.8 — Schéma : projet
+
 - [ ] **Objectif** : table projet rattachée à l'espace.
 - **Fichiers** : `server/db/schema/project.ts`.
 - **DoD** :
@@ -199,6 +215,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : S · ⚠️ dép. 1.1.
 
 ### 1.9 — Projets : CRUD + sélecteur + thème
+
 - [ ] **Objectif** : gérer et changer de projet, appliquer son thème.
 - **Fichiers** : `server/api/projects/*`, `app/components/layout/ProjectSwitcher.vue`.
 - **DoD** :
@@ -207,6 +224,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 - **Taille** : M · ⚠️ dép. 1.8.
 
 ### 1.10 — Page profil
+
 - [ ] **Objectif** : éditer son profil et son mot de passe.
 - **Fichiers** : `app/pages/parametres/profil.vue`, `server/api/me/*`.
 - **DoD** :
@@ -221,6 +239,7 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 But : faire entrer des données (fichier + fixtures) dans le modèle canonique, gérer les équipes.
 
 ### 2.1 — Schéma : couche canonique
+
 - [ ] **Objectif** : miroir normalisé de la source.
 - **Fichiers** : `server/db/schema/canonical.ts`.
 - **DoD** :
@@ -230,6 +249,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 1.8.
 
 ### 2.2 — Schéma : couche augmentation
+
 - [ ] **Objectif** : données éditées dans l'app.
 - **Fichiers** : `server/db/schema/augmentation.ts`.
 - **DoD** :
@@ -238,6 +258,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.1.
 
 ### 2.3 — Schéma : historisation
+
 - [ ] **Objectif** : traçabilité et séries temporelles.
 - **Fichiers** : `server/db/schema/history.ts`.
 - **DoD** :
@@ -246,6 +267,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : S · ⚠️ dép. 2.1.
 
 ### 2.4 — Domaine : types + `SourcePort`
+
 - [ ] **Objectif** : contrat d'entrée agnostique.
 - **Fichiers** : `server/domain/types.ts`, `server/domain/ports/SourcePort.ts`.
 - **DoD** :
@@ -254,6 +276,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : S · ⚠️ dép. 0.5.
 
 ### 2.5 — Pipeline d'import (squelette)
+
 - [ ] **Objectif** : orchestrateur des étapes.
 - **Fichiers** : `server/application/import/runImport.ts`.
 - **DoD** :
@@ -262,6 +285,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.3, 2.4.
 
 ### 2.6 — Étape Validate (Zod)
+
 - [ ] **Objectif** : contrôles de format des entrants.
 - **Fichiers** : `server/application/import/validate.ts`, `server/domain/schemas.ts`.
 - **DoD** :
@@ -270,6 +294,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.5.
 
 ### 2.7 — Étape Reconcile (upsert idempotent + change_log)
+
 - [ ] **Objectif** : écrire la couche canonique sans doublon ni écrasement de l'augmentation.
 - **Fichiers** : `server/application/import/reconcile.ts`.
 - **DoD** :
@@ -279,6 +304,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : L · ⚠️ dép. 2.6.
 
 ### 2.8 — Mapping configurable (champs + statuts)
+
 - [ ] **Objectif** : normaliser vers le vocabulaire interne.
 - **Fichiers** : `server/db/schema/mapping.ts`, `server/application/import/map.ts`.
 - **DoD** :
@@ -287,6 +313,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.7.
 
 ### 2.9 — Adapter import manuel (CSV/XLSX)
+
 - [ ] **Objectif** : alimenter le pipeline depuis un fichier.
 - **Fichiers** : `server/adapters/manual/ManualAdapter.ts`.
 - **DoD** :
@@ -295,6 +322,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.8.
 
 ### 2.10 — Fixtures (jeu de données factice)
+
 - [ ] **Objectif** : pouvoir développer sans JIRA.
 - **Fichiers** : `server/db/seed/fixtures.ts`, script `db:seed`.
 - **DoD** :
@@ -303,6 +331,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.1.
 
 ### 2.11 — UI import manuel
+
 - [ ] **Objectif** : écran d'import guidé.
 - **Fichiers** : `app/pages/import.vue`, `server/api/import/manual.post.ts`.
 - **DoD** :
@@ -311,6 +340,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 - **Taille** : M · ⚠️ dép. 2.9.
 
 ### 2.12 — Équipes & profils
+
 - [ ] **Objectif** : gérer équipes, postes et capacités.
 - **Fichiers** : `app/pages/equipes.vue`, `server/api/teams/*`, `server/api/members/*`.
 - **DoD** :
@@ -326,6 +356,7 @@ But : faire entrer des données (fichier + fixtures) dans le modèle canonique, 
 But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâches marquées 🧪 incluent des tests Vitest.**
 
 ### 3.1 — Workflow ordonné + pondérations
+
 - [ ] **Objectif** : base des calculs d'avancement et d'objectif.
 - **Fichiers** : `server/application/config/workflow.ts`, seed par défaut.
 - **DoD** :
@@ -334,6 +365,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 2.2.
 
 ### 3.2 — 🧪 ProgressService
+
 - [ ] **Objectif** : calcul d'avancement.
 - **Fichiers** : `server/domain/progress.ts`, `server/domain/__tests__/progress.test.ts`.
 - **DoD** :
@@ -343,6 +375,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.1.
 
 ### 3.3 — 🧪 CapacityService
+
 - [ ] **Objectif** : capacité vs charge.
 - **Fichiers** : `server/domain/capacity.ts`, `server/domain/__tests__/capacity.test.ts`.
 - **DoD** :
@@ -352,6 +385,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 2.12, 3.7.
 
 ### 3.4 — SLA : modèle + calendrier
+
 - [ ] **Objectif** : configurer les SLA.
 - **Fichiers** : `server/db/schema/sla.ts`, `server/db/schema/calendar.ts`.
 - **DoD** :
@@ -360,6 +394,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 2.2.
 
 ### 3.5 — 🧪 SlaService
+
 - [ ] **Objectif** : évaluer les états SLA.
 - **Fichiers** : `server/domain/sla.ts`, `server/domain/__tests__/sla.test.ts`.
 - **DoD** :
@@ -369,6 +404,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.4.
 
 ### 3.6 — 🧪 Réconciliation timesheet
+
 - [ ] **Objectif** : détecter les écarts de temps.
 - **Fichiers** : `server/domain/timesheet.ts`, `server/domain/__tests__/timesheet.test.ts`.
 - **DoD** :
@@ -378,6 +414,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 2.2.
 
 ### 3.7 — Snapshots de métriques
+
 - [ ] **Objectif** : figer les métriques à chaque import (séries temporelles).
 - **Fichiers** : `server/application/import/snapshot.ts`.
 - **DoD** :
@@ -386,6 +423,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.2, 2.5.
 
 ### 3.8 — Détection d'incohérences
+
 - [ ] **Objectif** : remonter les problèmes du sprint.
 - **Fichiers** : `server/domain/inconsistencies.ts`, `server/application/import/alert.ts`.
 - **DoD** :
@@ -394,6 +432,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.5, 3.6.
 
 ### 3.9 — Objectifs de sprint
+
 - [ ] **Objectif** : définir et mesurer l'objectif.
 - **Fichiers** : `server/domain/objective.ts`, `app/pages/sprints/[id].vue` (partie objectif).
 - **DoD** :
@@ -402,6 +441,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.1.
 
 ### 3.10 — API du dashboard
+
 - [ ] **Objectif** : agrégats prêts pour le front.
 - **Fichiers** : `server/api/dashboard/[sprintId].get.ts`.
 - **DoD** :
@@ -410,6 +450,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.7, 3.8, 3.9.
 
 ### 3.11 — Dashboard : header & KPI
+
 - [ ] **Objectif** : bandeau haut du dashboard.
 - **Fichiers** : `app/pages/index.vue`, `app/components/dashboard/SprintHeader.vue`.
 - **DoD** :
@@ -418,6 +459,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.10.
 
 ### 3.12 — Dashboard : avancement (graphes)
+
 - [ ] **Objectif** : visualiser l'avancement.
 - **Fichiers** : `app/components/dashboard/ProgressPanel.vue`.
 - **DoD** :
@@ -425,6 +467,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.11, 0.8.
 
 ### 3.13 — Dashboard : capacités
+
 - [ ] **Objectif** : section capacités.
 - **Fichiers** : `app/components/dashboard/CapacityPanel.vue`.
 - **DoD** :
@@ -432,6 +475,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.11.
 
 ### 3.14 — Dashboard : EPIC & incohérences
+
 - [ ] **Objectif** : sections EPIC et incohérences.
 - **Fichiers** : `app/components/dashboard/EpicPanel.vue`, `app/components/dashboard/InconsistencyPanel.vue`.
 - **DoD** :
@@ -440,6 +484,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.11.
 
 ### 3.15 — Page Sprints
+
 - [ ] **Objectif** : visualiser et planifier les sprints.
 - **Fichiers** : `app/pages/sprints/index.vue`, `app/pages/sprints/[id].vue`.
 - **DoD** :
@@ -448,6 +493,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.9.
 
 ### 3.16 — Page Livrables
+
 - [ ] **Objectif** : suivre les livrables (« expressions de besoin »).
 - **Fichiers** : `app/pages/livrables/index.vue`, `app/pages/livrables/[id].vue`.
 - **DoD** :
@@ -456,6 +502,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.2.
 
 ### 3.17 — Page Anomalies & SLA
+
 - [ ] **Objectif** : vue transverse des SLA.
 - **Fichiers** : `app/pages/anomalies.vue`.
 - **DoD** :
@@ -464,6 +511,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : M · ⚠️ dép. 3.5.
 
 ### 3.18 — Page Temps & Congés
+
 - [ ] **Objectif** : saisie des temps et congés.
 - **Fichiers** : `app/pages/temps-conges.vue`, `server/api/timesheet/*`, `server/api/leaves/*`.
 - **DoD** :
@@ -472,6 +520,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 - **Taille** : L · ⚠️ dép. 3.6.
 
 ### 3.19 — Page Paramètres
+
 - [ ] **Objectif** : configuration du projet.
 - **Fichiers** : `app/pages/parametres/index.vue` + sous-pages.
 - **DoD** :
@@ -486,6 +535,7 @@ But : le cœur de valeur — avancement, capacités, SLA, dashboard. **Les tâch
 But : remplacer l'import manuel par une alimentation automatique.
 
 ### 4.1 — Connecteurs : modèle + secrets chiffrés
+
 - [ ] **Objectif** : stocker les identifiants de connexion en sécurité.
 - **Fichiers** : `server/db/schema/connector.ts`, `server/utils/crypto.ts`.
 - **DoD** :
@@ -494,6 +544,7 @@ But : remplacer l'import manuel par une alimentation automatique.
 - **Taille** : M · ⚠️ dép. 1.8.
 
 ### 4.2 — JiraAdapter
+
 - [ ] **Objectif** : implémenter `SourcePort` pour JIRA.
 - **Fichiers** : `server/adapters/jira/JiraAdapter.ts`.
 - **DoD** :
@@ -502,6 +553,7 @@ But : remplacer l'import manuel par une alimentation automatique.
 - **Taille** : L · ⚠️ dép. 4.1, 2.8.
 
 ### 4.3 — Test de connexion JIRA
+
 - [ ] **Objectif** : valider les identifiants depuis l'UI.
 - **Fichiers** : `server/api/connectors/jira/test.post.ts`, page Paramètres → Intégrations.
 - **DoD** :
@@ -509,6 +561,7 @@ But : remplacer l'import manuel par une alimentation automatique.
 - **Taille** : S · ⚠️ dép. 4.2.
 
 ### 4.4 — Import planifié (Nitro) + manuel
+
 - [ ] **Objectif** : automatiser l'alimentation.
 - **Fichiers** : `server/tasks/import.ts`, `nuxt.config.ts` (scheduled tasks), `server/api/import/run.post.ts`.
 - **DoD** :
@@ -517,6 +570,7 @@ But : remplacer l'import manuel par une alimentation automatique.
 - **Taille** : M · ⚠️ dép. 4.2.
 
 ### 4.5 — Clé LLM (espace + surcharge projet)
+
 - [ ] **Objectif** : préparer l'IA (phase 5).
 - **Fichiers** : connecteur `type = llm`, `server/utils/resolveLlmKey.ts`.
 - **DoD** :
