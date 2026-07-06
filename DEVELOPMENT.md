@@ -104,11 +104,11 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.5 — Structure de dossiers (hexagonale)
 
-- [ ] **Objectif** : poser l'arborescence et les conventions.
+- [x] **Objectif** : poser l'arborescence et les conventions.
 - **Fichiers** : dossiers `server/domain/`, `server/application/`, `server/adapters/`, `server/db/schema/`, `server/api/`, `app/`.
 - **DoD** :
-  - [ ] `domain/` (types + calculs purs), `application/` (services orchestrateurs), `adapters/` (JIRA, manuel, LLM, mail).
-  - [ ] Un `README.md` court dans `server/` rappelle le rôle de chaque dossier.
+  - [x] `domain/` (types + calculs purs), `application/` (services orchestrateurs), `adapters/` (JIRA, manuel, LLM, mail).
+  - [x] Un `README.md` court dans `server/` rappelle le rôle de chaque dossier.
 - **Taille** : S · ⚠️ dép. 0.1.
 
 ### 0.6 — Vitest
