@@ -73,12 +73,12 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.2 — Tailwind 4 + DaisyUI 5
 
-- [ ] **Objectif** : intégrer Tailwind 4 et DaisyUI 5, config en CSS.
+- [x] **Objectif** : intégrer Tailwind 4 et DaisyUI 5, config en CSS.
 - **Fichiers** : `app/assets/css/main.css`, `nuxt.config.ts`.
 - **DoD** :
-  - [ ] `@import "tailwindcss";` + `@plugin "daisyui";` dans le CSS principal.
-  - [ ] Deux thèmes déclarés (`light`, `dark`) via `@plugin "daisyui/theme"`, appliqués par `data-theme` sur `<html>`.
-  - [ ] Un composant DaisyUI (`btn`, `card`) s'affiche correctement.
+  - [x] `@import "tailwindcss";` + `@plugin "daisyui";` dans le CSS principal.
+  - [x] Deux thèmes déclarés (`light`, `dark`) via `@plugin "daisyui/theme"`, appliqués par `data-theme` sur `<html>`.
+  - [x] Un composant DaisyUI (`btn`, `card`) s'affiche correctement.
 - **Taille** : S · ⚠️ dép. 0.1.
 
 ### 0.3 — Biome + scripts npm

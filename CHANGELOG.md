@@ -9,3 +9,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Initialisation du projet Nuxt 4 (tâche 0.1) : `compatibilityDate` fixée au 2025-07-15, TypeScript strict, version Nuxt 4.4.8 épinglée, lockfile committé.
+- Intégration Tailwind CSS 4 + DaisyUI 5 (tâche 0.2) : config en CSS via `@tailwindcss/vite`, tous les thèmes DaisyUI activés, `data-theme` posé sur `<html>` via `useHead()`.
