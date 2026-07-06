@@ -13,3 +13,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Ajout Biome 2.5.2 (tâche 0.3) : lint, format `--write`, imports triés, quotes doubles, support directives Tailwind CSS.
 - Intégration Drizzle ORM + better-sqlite3 (tâche 0.4) : `useDb()` typé, config `drizzle-kit`, scripts `db:generate` / `db:migrate` / `db:seed`, table de test migrée sur base vierge.
 - Console interactive Drizzle façon `rails console` (`npm run console`) : `db` et les tables du schéma disponibles directement dans un REPL Node avec top-level await.
+- Structure de dossiers hexagonale côté serveur (tâche 0.5) : `server/domain/` (types + calculs purs), `server/application/` (services orchestrateurs), `server/adapters/{jira,manual,llm,mail}/` (implémentations des ports), `server/api/` (endpoints Nitro) ; `server/README.md` documente le rôle de chaque dossier.
