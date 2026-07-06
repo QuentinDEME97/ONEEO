@@ -14,8 +14,8 @@ Document de suivi du développement, découpé en tâches fines et guidées. Obj
 
 ### Stack figée (ne pas rediscuter en cours de tâche)
 
-- **Runtime** : Node 22 LTS. **Gestionnaire de paquets** : npm.
-- **Framework** : Nuxt 4 (fullstack). Serveur = Nitro (`server/`), front = `app/`.
+- **Runtime** : Node 24.18.0. **Gestionnaire de paquets** : npm.
+- **Framework** : Nuxt 4.4.8 (fullstack). Serveur = Nitro (`server/`), front = `app/`.
 - **UI** : Tailwind CSS 4 + DaisyUI 5 (config en CSS, thème par `data-theme`).
 - **Graphes** : ApexCharts via `vue3-apexcharts` (composant **client-only**).
 - **BDD** : SQLite + Drizzle ORM (`drizzle-orm/better-sqlite3`).
@@ -41,6 +41,7 @@ npm run test         # Vitest (services de calcul)
 npm run db:generate  # drizzle-kit : génère la migration depuis le schéma
 npm run db:migrate   # applique les migrations
 npm run db:seed      # jeu de données factice (fixtures)
+npm run console      # console interactive Drizzle (façon `rails console`)
 ```
 
 ---
@@ -92,13 +93,14 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.4 — Drizzle + better-sqlite3
 
-- [ ] **Objectif** : connexion SQLite typée + workflow de migration.
+- [x] **Objectif** : connexion SQLite typée + workflow de migration.
 - **Fichiers** : `drizzle.config.ts`, `server/utils/db.ts`, `server/db/schema/index.ts`, `package.json`.
 - **DoD** :
-  - [ ] `useDb()` renvoie une instance Drizzle (`drizzle-orm/better-sqlite3`), fichier en `data/oneeo.sqlite`.
-  - [ ] Scripts `db:generate` / `db:migrate` / `db:seed` en place.
-  - [ ] Une table de test migre sans erreur sur une base vierge.
+  - [x] `useDb()` renvoie une instance Drizzle (`drizzle-orm/better-sqlite3`), fichier en `data/oneeo.sqlite`.
+  - [x] Scripts `db:generate` / `db:migrate` / `db:seed` en place.
+  - [x] Une table de test migre sans erreur sur une base vierge.
 - **Taille** : M · ⚠️ dép. 0.1.
+- **Bonus** : `npm run console` ouvre une console Node interactive (façon `rails console`) avec `db` et les tables du schéma déjà en scope (`server/db/console.ts`).
 
 ### 0.5 — Structure de dossiers (hexagonale)
 
