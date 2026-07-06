@@ -98,3 +98,11 @@ Elle démarre un REPL avec `db` (l'instance Drizzle) et toutes les tables du sch
 oneeo> await db.select().from(healthCheck)
 [ { id: 1, createdAt: '2026-07-06 17:41:07' } ]
 ```
+
+## Tests (Vitest)
+
+Les tests unitaires ciblent le domaine métier pur (`server/domain/`), sans runtime Nuxt :
+
+```bash
+npm run test  # Vitest (server/**/__tests__/**/*.test.ts)
+```

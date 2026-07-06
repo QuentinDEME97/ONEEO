@@ -113,10 +113,10 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.6 — Vitest
 
-- [ ] **Objectif** : tests unitaires purs pour le domaine.
+- [x] **Objectif** : tests unitaires purs pour le domaine.
 - **Fichiers** : `vitest.config.ts`, `server/domain/__tests__/smoke.test.ts`.
 - **DoD** :
-  - [ ] `npm run test` exécute un test smoke qui passe (fonction pure, sans runtime Nuxt).
+  - [x] `npm run test` exécute un test smoke qui passe (fonction pure, sans runtime Nuxt).
 - **Taille** : XS · ⚠️ dép. 0.5.
 
 ### 0.7 — Layout de base (sidebar + navbar)
