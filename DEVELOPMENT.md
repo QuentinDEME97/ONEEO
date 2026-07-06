@@ -83,11 +83,11 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.3 — Biome + scripts npm
 
-- [ ] **Objectif** : lint/format cohérent.
+- [x] **Objectif** : lint/format cohérent.
 - **Fichiers** : `biome.json`, `package.json`.
 - **DoD** :
-  - [ ] `npm run lint` et `npm run format` fonctionnent.
-  - [ ] Règles de base (imports triés, quotes cohérentes) actives.
+  - [x] `npm run lint` et `npm run format` fonctionnent.
+  - [x] Règles de base (imports triés, quotes cohérentes) actives.
 - **Taille** : XS.
 
 ### 0.4 — Drizzle + better-sqlite3

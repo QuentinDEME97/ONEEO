@@ -5,6 +5,8 @@
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
+    "lint": "biome lint",
+    "format": "biome format --write",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -16,5 +18,8 @@
     "tailwindcss": "^4.3.2",
     "vue": "^3.5.39",
     "vue-router": "^5.1.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.2"
   }
 }
