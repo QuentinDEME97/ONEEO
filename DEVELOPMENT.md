@@ -131,11 +131,11 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.8 — Wrapper ApexCharts + helper de thème
 
-- [ ] **Objectif** : graphes prêts à l'emploi, thémés DaisyUI.
+- [x] **Objectif** : graphes prêts à l'emploi, thémés DaisyUI.
 - **Fichiers** : `app/components/charts/BaseChart.client.vue`, `app/composables/useChartTheme.ts`.
 - **DoD** :
-  - [ ] Composant **client-only** rendant un ApexChart de démo.
-  - [ ] `useChartTheme()` lit les variables CSS DaisyUI (`--color-primary`, etc.) et les injecte dans les options.
+  - [x] Composant **client-only** rendant un ApexChart de démo.
+  - [x] `useChartTheme()` lit les variables CSS DaisyUI (`--color-primary`, etc.) et les injecte dans les options.
 - **Taille** : M · ⚠️ dép. 0.2.
 
 ---

@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [0.0.1] - 2026-07-07
+
 ### Added
 
 - Initialisation du projet Nuxt 4 (tâche 0.1) : `compatibilityDate` fixée au 2025-07-15, TypeScript strict, version Nuxt 4.4.8 épinglée, lockfile committé.
@@ -17,7 +19,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Intégration Vitest (tâche 0.6) : `vitest.config.ts` ciblant `server/**/__tests__/**/*.test.ts`, script `npm run test`, test smoke sur une fonction pure (`server/domain/__tests__/smoke.test.ts`) exécuté sans runtime Nuxt.
 - Layout de base navigable (tâche 0.7) : drawer DaisyUI sidebar always-open sur desktop / hamburger mobile, navbar sticky avec notifications et menu utilisateur, 8 pages placeholder (Dashboard, Sprints, Livrables, Équipes, Temps & Congés, Anomalies & SLA, Rapports & IA, Paramètres).
 - Intégration HugeIcons (`@hugeicons/core-free-icons` + `@hugeicons/vue`) pour les icônes de navigation et de la navbar.
+- Wrapper ApexCharts + helper de thème (tâche 0.8) : `app/components/charts/BaseChart.client.vue` (composant client-only avec démo intégrée), `useChartTheme()` qui lit les variables CSS DaisyUI (`--color-primary`, `--color-base-content`, etc.) et les injecte dans les options ApexCharts, avec réactivité au changement de `data-theme` via `MutationObserver`.
 
 ### Changed
 
 - Remplacement de Biome par ESLint (`@nuxt/eslint`) + Prettier : résout les faux positifs "unused import" sur les templates Vue, config Prettier double quotes / 2 espaces, règle `no-explicit-any` désactivée.
+- Toolbar ApexCharts masquée par défaut dans `BaseChart.client.vue` (surchageable via les options).
