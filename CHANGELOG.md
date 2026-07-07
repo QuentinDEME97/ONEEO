@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- Schéma d'identité & RBAC (tâche 1.1) : tables `user`, `space`, `space_membership`, `role`, `permission`, `role_permission` (`server/db/schema/identity.ts`), PK en UUID (`crypto.randomUUID()` via `$defaultFn`), `created_at`/`updated_at` (rafraîchi automatiquement à chaque écriture), `role.is_system`, unicité `(space_id, role.name)` et `(user_id, space_id)` sur `space_membership`.
+
+### Changed
+
+- `useDb()` active `PRAGMA foreign_keys = ON` afin que les contraintes `ON DELETE CASCADE`/`RESTRICT` du schéma soient appliquées par SQLite.
+
+### Removed
+
+- Table de test `health_check` (tâche 0.4), remplacée par le schéma métier de la tâche 1.1.
+
 ## [0.0.1] - 2026-07-07
 
 ### Added
