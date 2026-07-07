@@ -49,7 +49,7 @@ npm run console      # console interactive Drizzle (façon `rails console`)
 ## ⚠️ Points d'attention (doutes à garder en tête)
 
 - **Version Nuxt** ❓ : épingler une version **stable connue** et **committer le lockfile**. La 4.4.2 a cassé le serveur de dev (transition h3 v2). Partir sur la dernière 4.x qui démarre proprement en dev, la figer, ne pas « bump » à l'aveugle.
-- **Hash mot de passe** : `node:crypto` `scrypt` (zéro dépendance) — retenu par défaut. Alternative `argon2` si tu préfères.
+- **Hash mot de passe** : `hashPassword` / `verifyPassword` de `nuxt-auth-utils` (scrypt via `@adonisjs/hash`, format PHC avec paramètres embarqués + `passwordNeedsReHash()` pour la rotation des coûts). Retenu car le module est déjà une dépendance pour les sessions — `@adonisjs/hash` est donc déjà présent. L'option initiale `node:crypto` (zéro dépendance) a été abandonnée : elle réintroduisait du crypto maison, sans chemin de migration des paramètres scrypt, et « zéro dépendance » n'était plus vrai une fois `nuxt-auth-utils` installé.
 - **Stockage avatar** ❓ : fichier sur disque (dossier `data/avatars`, chemin en base). Pas de base64 en BDD. À confirmer si tu veux du base64.
 - **Invitations par email** : nécessitent le SMTP (phase 5). En MVP, **l'admin crée l'utilisateur avec un mot de passe temporaire** à changer à la 1ʳᵉ connexion.
 - **Jours fériés (FR)** : table `holiday` par espace + seed FR (plutôt qu'une lib), pour rester configurable et agnostique.
@@ -157,12 +157,12 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 ### 1.2 — Auth (sessions + hash)
 
 - [x] **Objectif** : brancher `nuxt-auth-utils` et le hachage de mot de passe.
-- **Fichiers** : `nuxt.config.ts`, `server/utils/password.ts`, `.env`.
+- **Fichiers** : `nuxt.config.ts`, `.env`.
 - **DoD** :
   - [x] `NUXT_SESSION_PASSWORD` et `NUXT_APP_SECRET` en `.env` (+ `.env.example`).
-  - [x] `hashPassword()` / `verifyPassword()` via `node:crypto` scrypt.
+  - [x] `hashPassword()` / `verifyPassword()` via `nuxt-auth-utils` (scrypt / `@adonisjs/hash`).
 - **Taille** : S · ⚠️ dép. 1.1.
-- **Note** : `nuxt-auth-utils` fournit son propre `hashPassword`/`verifyPassword` (scrypt via `@adonisjs/hash`), mais celui-ci dépend du runtime Nitro (`#imports`) et n'est donc pas testable en Vitest pur. Notre `server/utils/password.ts` (zéro dépendance, `node:crypto`) porte les mêmes noms et **prend le dessus** sur l'auto-import du module (confirmé par le warning Nitro « Duplicated imports » au démarrage — attendu, sans impact fonctionnel).
+- **Note** : on utilise directement `hashPassword()` / `verifyPassword()` fournis (et auto-importés côté serveur) par `nuxt-auth-utils` — pas de wrapper maison. On ne teste pas ces fonctions (dépendance externe, déjà couverte par le module). ⚠️ signature : `verifyPassword(hashedPassword, plainPassword)` — le **hash en premier**, à savoir pour les appels de la tâche 1.4.
 
 ### 1.3 — Premier lancement (setup admin) + seed rôles
 
