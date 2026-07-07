@@ -14,3 +14,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Intégration Drizzle ORM + better-sqlite3 (tâche 0.4) : `useDb()` typé, config `drizzle-kit`, scripts `db:generate` / `db:migrate` / `db:seed`, table de test migrée sur base vierge.
 - Console interactive Drizzle façon `rails console` (`npm run console`) : `db` et les tables du schéma disponibles directement dans un REPL Node avec top-level await.
 - Structure de dossiers hexagonale côté serveur (tâche 0.5) : `server/domain/` (types + calculs purs), `server/application/` (services orchestrateurs), `server/adapters/{jira,manual,llm,mail}/` (implémentations des ports), `server/api/` (endpoints Nitro) ; `server/README.md` documente le rôle de chaque dossier.
+- Intégration Vitest (tâche 0.6) : `vitest.config.ts` ciblant `server/**/__tests__/**/*.test.ts`, script `npm run test`, test smoke sur une fonction pure (`server/domain/__tests__/smoke.test.ts`) exécuté sans runtime Nuxt.
