@@ -5,9 +5,8 @@ useHead({
 </script>
 
 <template>
-  <div>
-    <button class="btn btn-primary">Button</button>
-    <NuxtRouteAnnouncer />
-    <NuxtWelcome />
-  </div>
+  <NuxtRouteAnnouncer />
+  <NuxtLayout>
+    <NuxtPage />
+  </NuxtLayout>
 </template>

@@ -121,12 +121,12 @@ But : un squelette Nuxt navigable, avec BDD, lint et tests branchés.
 
 ### 0.7 — Layout de base (sidebar + navbar)
 
-- [ ] **Objectif** : coquille de l'app navigable.
+- [x] **Objectif** : coquille de l'app navigable.
 - **Fichiers** : `app/layouts/default.vue`, `app/components/layout/Sidebar.vue`, `app/components/layout/Navbar.vue`.
 - **DoD** :
-  - [ ] Sidebar DaisyUI (`drawer` + `menu`) avec les entrées : Dashboard, Sprints, Livrables, Équipes, Temps & Congés, Anomalies & SLA, Rapports & IA, Paramètres.
-  - [ ] Navbar avec zone droite : notifications (icône), menu utilisateur (avatar).
-  - [ ] Les liens pointent vers des pages vides (placeholders) sans erreur.
+  - [x] Sidebar DaisyUI (`drawer` + `menu`) avec les entrées : Dashboard, Sprints, Livrables, Équipes, Temps & Congés, Anomalies & SLA, Rapports & IA, Paramètres.
+  - [x] Navbar avec zone droite : notifications (icône), menu utilisateur (avatar).
+  - [x] Les liens pointent vers des pages vides (placeholders) sans erreur.
 - **Taille** : M · ⚠️ dép. 0.2.
 
 ### 0.8 — Wrapper ApexCharts + helper de thème
