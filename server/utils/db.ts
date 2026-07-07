@@ -8,6 +8,7 @@ export function useDb() {
   if (!db) {
     const sqlite = new Database("data/oneeo.sqlite");
     sqlite.pragma("journal_mode = WAL");
+    sqlite.pragma("foreign_keys = ON");
     db = drizzle(sqlite, { schema });
   }
   return db;
