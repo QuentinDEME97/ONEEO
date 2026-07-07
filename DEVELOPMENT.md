@@ -156,12 +156,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.2 — Auth (sessions + hash)
 
-- [ ] **Objectif** : brancher `nuxt-auth-utils` et le hachage de mot de passe.
+- [x] **Objectif** : brancher `nuxt-auth-utils` et le hachage de mot de passe.
 - **Fichiers** : `nuxt.config.ts`, `server/utils/password.ts`, `.env`.
 - **DoD** :
-  - [ ] `NUXT_SESSION_PASSWORD` et `NUXT_APP_SECRET` en `.env` (+ `.env.example`).
-  - [ ] `hashPassword()` / `verifyPassword()` via `node:crypto` scrypt.
+  - [x] `NUXT_SESSION_PASSWORD` et `NUXT_APP_SECRET` en `.env` (+ `.env.example`).
+  - [x] `hashPassword()` / `verifyPassword()` via `node:crypto` scrypt.
 - **Taille** : S · ⚠️ dép. 1.1.
+- **Note** : `nuxt-auth-utils` fournit son propre `hashPassword`/`verifyPassword` (scrypt via `@adonisjs/hash`), mais celui-ci dépend du runtime Nitro (`#imports`) et n'est donc pas testable en Vitest pur. Notre `server/utils/password.ts` (zéro dépendance, `node:crypto`) porte les mêmes noms et **prend le dessus** sur l'auto-import du module (confirmé par le warning Nitro « Duplicated imports » au démarrage — attendu, sans impact fonctionnel).
 
 ### 1.3 — Premier lancement (setup admin) + seed rôles
 
