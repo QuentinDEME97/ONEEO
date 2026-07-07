@@ -9,10 +9,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Schéma d'identité & RBAC (tâche 1.1) : tables `user`, `space`, `space_membership`, `role`, `permission`, `role_permission` (`server/db/schema/identity.ts`), PK en UUID (`crypto.randomUUID()` via `$defaultFn`), `created_at`/`updated_at` (rafraîchi automatiquement à chaque écriture), `role.is_system`, unicité `(space_id, role.name)` et `(user_id, space_id)` sur `space_membership`.
+- Auth : sessions + hash de mot de passe (tâche 1.2) : module `nuxt-auth-utils` branché dans `nuxt.config.ts`, `NUXT_SESSION_PASSWORD` (scellement des cookies de session) et `NUXT_APP_SECRET` (chiffrement des secrets connecteurs, phase 4) documentés dans `.env.example`. Le hachage utilise directement `hashPassword()` / `verifyPassword()` fournis par `nuxt-auth-utils` (scrypt via `@adonisjs/hash`, format PHC + `passwordNeedsReHash()`) — pas de wrapper maison.
+- Test e2e API (`@nuxt/test-utils`) sur les routes de session exposées par `nuxt-auth-utils` (`server/utils/__tests__/auth-session.e2e.test.ts`) : `GET /api/_auth/session` sans cookie, `DELETE /api/_auth/session` (déconnexion + purge du cookie).
 
 ### Changed
 
 - `useDb()` active `PRAGMA foreign_keys = ON` afin que les contraintes `ON DELETE CASCADE`/`RESTRICT` du schéma soient appliquées par SQLite.
+- `vitest.config.ts` : `testTimeout`/`hookTimeout` portés à 30 s pour accommoder le démarrage d'un vrai serveur Nuxt dans les tests `*.e2e.test.ts`.
 
 ### Removed
 
