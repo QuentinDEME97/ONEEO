@@ -146,12 +146,12 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.1 — Schéma : identité & RBAC
 
-- [ ] **Objectif** : tables d'identité et de rôles.
+- [x] **Objectif** : tables d'identité et de rôles.
 - **Fichiers** : `server/db/schema/identity.ts`.
 - **DoD** :
-  - [ ] Tables `user`, `space`, `space_membership`, `role`, `permission`, `role_permission`.
-  - [ ] `role.is_system` (bool), unicité `(space_id, role.name)`, unicité `(user_id, space_id)` sur membership.
-  - [ ] Migration OK.
+  - [x] Tables `user`, `space`, `space_membership`, `role`, `permission`, `role_permission`.
+  - [x] `role.is_system` (bool), unicité `(space_id, role.name)`, unicité `(user_id, space_id)` sur membership.
+  - [x] Migration OK.
 - **Taille** : M · ⚠️ dép. 0.4.
 
 ### 1.2 — Auth (sessions + hash)
