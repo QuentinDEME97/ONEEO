@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import type { ApexOptions } from "apexcharts";
 import { computed } from "vue";
 import VueApexCharts from "vue3-apexcharts";
-import type { ApexOptions } from "apexcharts";
 
 const props = withDefaults(
   defineProps<{
@@ -15,7 +15,7 @@ const props = withDefaults(
     height: 320,
     series: undefined,
     options: undefined,
-  },
+  }
 );
 
 const demoSeries = [
@@ -28,6 +28,19 @@ const demoSeries = [
 const demoOptions: ApexOptions = {
   xaxis: { categories: ["S1", "S2", "S3", "S4", "S5", "S6", "S7"] },
   title: { text: "Démo — BaseChart" },
+  chart: {
+    dropShadow: {
+      enabled: true,
+      color: "#000",
+      top: 18,
+      left: 7,
+      blur: 10,
+      opacity: 0.5,
+    },
+  },
+  stroke: {
+    curve: "smooth",
+  },
 };
 
 const { themeOptions } = useChartTheme();
@@ -49,5 +62,10 @@ const mergedOptions = computed<ApexOptions>(() => {
 </script>
 
 <template>
-  <VueApexCharts :type="type" :height="height" :series="series" :options="mergedOptions" />
+  <VueApexCharts
+    :type="type"
+    :height="height"
+    :series="series"
+    :options="mergedOptions"
+  />
 </template>
