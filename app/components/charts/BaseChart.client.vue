@@ -53,6 +53,7 @@ const mergedOptions = computed<ApexOptions>(() => {
     ...baseOptions,
     ...themeOptions.value,
     chart: {
+      toolbar: { show: false },
       ...baseOptions.chart,
       ...themeOptions.value.chart,
       type: props.type,
