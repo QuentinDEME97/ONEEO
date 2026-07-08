@@ -95,8 +95,20 @@ npm run console
 Elle démarre un REPL avec `db` (l'instance Drizzle) et toutes les tables du schéma déjà importées dans le scope, ainsi que les helpers de `drizzle-orm` (`eq`, `and`, `sql`, …). Le top-level `await` fonctionne nativement dans le REPL Node :
 
 ```
-oneeo> await db.select().from(healthCheck)
-[ { id: 1, createdAt: '2026-07-06 17:41:07' } ]
+oneeo> await db.select().from(user)
+[
+  {
+    id: 'd3197316-0d65-4d0c-9f5a-e19bd2ed5a55',
+    email: 'demequentin@gmail.com',
+    passwordHash: '$scrypt$n=16384,r=8,p=1$fpJcLgMyO0r52DeLOUD0SA$t0RZpl4EXRLjChaWcoEXCrhtrfceKA3gbWN1kWeTmaX78I4jFvVAhVWVV7wXJGzBELxYTg/4exroUAEK/9D/9Q',
+    firstName: 'Quentin',
+    lastName: 'DEMÉ',
+    avatarPath: null,
+    mustChangePassword: false,
+    createdAt: '2026-07-08 10:43:55',
+    updatedAt: '2026-07-08 10:43:55'
+  }
+]
 ```
 
 ## Tests (Vitest)

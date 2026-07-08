@@ -166,11 +166,11 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.3 — Premier lancement (setup admin) + seed rôles
 
-- [ ] **Objectif** : bootstrap du premier administrateur.
+- [x] **Objectif** : bootstrap du premier administrateur.
 - **Fichiers** : `server/api/setup.post.ts`, `app/pages/setup.vue`, `server/utils/roles.ts`.
 - **DoD** :
-  - [ ] Si **aucun** `user` en base, toute navigation redirige vers `/setup`.
-  - [ ] Le setup crée le 1ᵉʳ user + un espace + les rôles système `Owner` et `Member` (avec **toutes** les permissions en MVP), et connecte l'utilisateur.
+  - [x] Si **aucun** `user` en base, toute navigation redirige vers `/setup`.
+  - [x] Le setup crée le 1ᵉʳ user + un espace + les rôles système `Owner` et `Member` (avec **toutes** les permissions en MVP), et connecte l'utilisateur.
 - **Taille** : M · ⚠️ dép. 1.2.
 
 ### 1.4 — Login / logout

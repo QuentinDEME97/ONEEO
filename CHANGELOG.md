@@ -11,11 +11,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Schéma d'identité & RBAC (tâche 1.1) : tables `user`, `space`, `space_membership`, `role`, `permission`, `role_permission` (`server/db/schema/identity.ts`), PK en UUID (`crypto.randomUUID()` via `$defaultFn`), `created_at`/`updated_at` (rafraîchi automatiquement à chaque écriture), `role.is_system`, unicité `(space_id, role.name)` et `(user_id, space_id)` sur `space_membership`.
 - Auth : sessions + hash de mot de passe (tâche 1.2) : module `nuxt-auth-utils` branché dans `nuxt.config.ts`, `NUXT_SESSION_PASSWORD` (scellement des cookies de session) et `NUXT_APP_SECRET` (chiffrement des secrets connecteurs, phase 4) documentés dans `.env.example`. Le hachage utilise directement `hashPassword()` / `verifyPassword()` fournis par `nuxt-auth-utils` (scrypt via `@adonisjs/hash`, format PHC + `passwordNeedsReHash()`) — pas de wrapper maison.
 - Test e2e API (`@nuxt/test-utils`) sur les routes de session exposées par `nuxt-auth-utils` (`server/utils/__tests__/auth-session.e2e.test.ts`) : `GET /api/_auth/session` sans cookie, `DELETE /api/_auth/session` (déconnexion + purge du cookie).
+- Premier lancement (setup admin) + seed rôles (tâche 1.3) : `server/utils/roles.ts` (catalogue de 8 permissions MVP + `ensureSystemRoles()` qui crée les rôles système `Owner`/`Member` d'un espace et leur attribue toutes les permissions), `server/api/setup.get.ts` (`{ needsSetup }`), `server/api/setup.post.ts` (validation Zod, transaction Drizzle créant l'espace + les rôles + le premier utilisateur + le rattachement Owner, puis connexion via `setUserSession`), `app/pages/setup.vue` (formulaire), `app/middleware/setup-check.global.ts` (redirige toute navigation vers `/setup` tant qu'aucun utilisateur n'existe, et inversement). Ajout de la dépendance `zod` (prévue par la stack, absente jusqu'ici) et de `shared/types/auth.d.ts` (typage `User` de `#auth-utils`).
 
 ### Changed
 
 - `useDb()` active `PRAGMA foreign_keys = ON` afin que les contraintes `ON DELETE CASCADE`/`RESTRICT` du schéma soient appliquées par SQLite.
 - `vitest.config.ts` : `testTimeout`/`hookTimeout` portés à 30 s pour accommoder le démarrage d'un vrai serveur Nuxt dans les tests `*.e2e.test.ts`.
+- `npm run test` applique désormais les migrations (`pretest`) avant de lancer Vitest, pour que les tests e2e qui démarrent un vrai serveur Nuxt (middleware/API dépendant du schéma) n'échouent pas sur une base vierge non migrée.
 
 ### Removed
 
