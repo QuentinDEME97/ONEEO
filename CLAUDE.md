@@ -28,9 +28,9 @@ npm run console      # REPL Node avec db + schema disponibles (façon rails cons
 - **STATUT** = mot-clé Keep a Changelog en majuscules : `ADDED`, `CHANGED`, `FIXED`, `REMOVED`, `DEPRECATED`, `SECURITY`
 - Gitmojis courants : `✨` ADDED · `🔧` CHANGED · `🐛` FIXED · `🗑️` REMOVED · `🎉` commit initial
 
-Exemple : `✨ ADDED | Layout sidebar + navbar`
+> Il est très important que le gitmoji corresponde avant tout au contenu du commit, et pas seulement au statut. Par exemple, un commit qui ajoute une nouvelle fonctionnalité peut utiliser `✨ ADDED`, mais si cela traite d'envoi de mail il devrait plutôt utiliser `✉️ ADDED`.
 
-> Le gitmoji peut être remplacé par un emoji plus représentatif des changements. Le mot-clé STATUT est obligatoire pour générer automatiquement le CHANGELOG.md.
+Exemple : `✨ ADDED | Layout sidebar + navbar`
 
 ## CHANGELOG.md
 
