@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { EyeIcon, EyeOffIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/vue";
+
 definePageMeta({ layout: false });
 
 const { fetch: refreshSession } = useUserSession();
+
+const showPassword = ref(false);
 
 const form = reactive({
   spaceName: "",
@@ -100,24 +105,48 @@ async function submit() {
 
           <label class="form-control">
             <span class="label-text mb-1">Mot de passe</span>
-            <input
-              v-model="form.password"
-              type="password"
-              required
-              minlength="8"
-              class="input input-bordered w-full"
-            />
+            <div class="relative">
+              <input
+                v-model="form.password"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                minlength="8"
+                class="input input-bordered w-full pr-10"
+              />
+              <button
+                type="button"
+                class="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
+                @click="showPassword = !showPassword"
+              >
+                <HugeiconsIcon
+                  :icon="showPassword ? EyeOffIcon : EyeIcon"
+                  size="18"
+                />
+              </button>
+            </div>
           </label>
 
           <label class="form-control">
             <span class="label-text mb-1">Confirmer le mot de passe</span>
-            <input
-              v-model="form.passwordConfirm"
-              type="password"
-              required
-              minlength="8"
-              class="input input-bordered w-full"
-            />
+            <div class="relative">
+              <input
+                v-model="form.passwordConfirm"
+                :type="showPassword ? 'text' : 'password'"
+                required
+                minlength="8"
+                class="input input-bordered w-full pr-10"
+              />
+              <button
+                type="button"
+                class="absolute cursor-pointer right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content"
+                @click="showPassword = !showPassword"
+              >
+                <HugeiconsIcon
+                  :icon="showPassword ? EyeOffIcon : EyeIcon"
+                  size="18"
+                />
+              </button>
+            </div>
           </label>
 
           <p v-if="errorMessage" class="text-error text-sm">
