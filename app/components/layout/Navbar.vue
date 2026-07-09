@@ -10,7 +10,7 @@ const { clear } = useUserSession();
 
 const logout = async () => {
   await clear();
-  await navigateTo("/auth/login");
+  await navigateTo("/login");
 };
 </script>
 

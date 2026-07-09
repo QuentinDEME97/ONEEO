@@ -184,12 +184,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.5 — Middleware d'auth + scoping espace
 
-- [ ] **Objectif** : protéger les routes et cadrer l'espace courant.
-- **Fichiers** : `app/middleware/auth.global.ts`, `server/utils/context.ts`.
+- [x] **Objectif** : protéger les routes et cadrer l'espace courant.
+- **Fichiers** : `app/middleware/01-login-check.global.ts`, `server/utils/context.ts`.
 - **DoD** :
-  - [ ] Non connecté → redirigé vers `/login` (sauf `/setup`, `/login`).
-  - [ ] Un helper serveur renvoie `{ userId, spaceId, projectId }` et **rejette** l'accès à un espace/projet dont l'utilisateur n'est pas membre.
+  - [x] Non connecté → redirigé vers `/login` (sauf `/setup`, `/login`).
+  - [x] Un helper serveur renvoie `{ userId, spaceId, projectId }` et **rejette** l'accès à un espace/projet dont l'utilisateur n'est pas membre.
 - **Taille** : M · ⚠️ dép. 1.4.
+- **Note** : la redirection était déjà couverte par `00-setup-check.global.ts` / `01-login-check.global.ts` (tâche 1.4) ; pas de nouveau fichier `auth.global.ts`, la route a simplement été renommée de `/auth/login` vers `/login` pour matcher le DoD. `projectId` est toujours `null` : la table `project` n'existe pas encore (tâche 1.8).
 
 ### 1.6 — Espaces : CRUD + sélecteur
 
