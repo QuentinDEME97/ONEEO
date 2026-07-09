@@ -31,7 +31,7 @@ const isActive = (path: string, exact: boolean) => {
 </script>
 
 <template>
-  <div class="drawer-side z-40">
+  <div class="drawer-side z-40 overflow-visible">
     <label
       for="sidebar-drawer"
       aria-label="close sidebar"
@@ -42,6 +42,9 @@ const isActive = (path: string, exact: boolean) => {
         class="h-16 flex items-center px-5 border-b border-base-300 shrink-0"
       >
         <span class="text-xl font-bold text-primary">ONEEO</span>
+      </div>
+      <div class="px-3 pt-3">
+        <LayoutSpaceSwitcher />
       </div>
       <ul class="menu p-3 flex-1 gap-0.5 w-full">
         <li v-for="item in navItems" :key="item.to">

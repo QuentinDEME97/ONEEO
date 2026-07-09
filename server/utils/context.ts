@@ -10,7 +10,8 @@ export async function resolveRequestContext(
   event: H3Event,
   opts: { spaceId?: string } = {},
 ): Promise<RequestContext> {
-  const { user } = await getUserSession(event);
+  const session = await getUserSession(event);
+  const { user } = session;
   if (!user) {
     throw createError({
       statusCode: 401,
@@ -31,7 +32,7 @@ export async function resolveRequestContext(
     });
   }
 
-  const spaceId = opts.spaceId ?? memberships[0]!.spaceId;
+  const spaceId = opts.spaceId ?? session.currentSpaceId ?? memberships[0]!.spaceId;
   if (!memberships.some((m) => m.spaceId === spaceId)) {
     logger.warn({ userId: user.id, spaceId }, "contexte : accès à l'espace refusé");
     throw createError({

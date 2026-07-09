@@ -194,12 +194,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.6 — Espaces : CRUD + sélecteur
 
-- [ ] **Objectif** : gérer et changer d'espace.
+- [x] **Objectif** : gérer et changer d'espace.
 - **Fichiers** : `server/api/spaces/*`, `app/components/layout/SpaceSwitcher.vue`.
 - **DoD** :
-  - [ ] Créer / lister ses espaces ; sélecteur dans la sidebar mémorisant l'espace actif.
-  - [ ] L'espace porte un thème par défaut (appliqué via `data-theme`).
+  - [x] Créer / lister ses espaces ; sélecteur dans la sidebar mémorisant l'espace actif.
+  - [x] L'espace porte un thème par défaut (appliqué via `data-theme`).
 - **Taille** : M · ⚠️ dép. 1.5.
+- **Note** : l'espace actif est mémorisé côté session (`UserSession.currentSpaceId`, mergé sans écraser `user`/`rememberMe`), lue en priorité par `resolveRequestContext()` avant le fallback sur la première `space_membership` (1.5, rétrocompatible). Créer un espace = un utilisateur déjà connecté peut créer un espace additionnel dont il devient Owner (à distinguer de l'inscription self-service, backlog phase 5).
 
 ### 1.7 — Utilisateurs de l'espace (création par l'admin)
 
