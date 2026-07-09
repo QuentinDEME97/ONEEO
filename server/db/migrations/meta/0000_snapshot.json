@@ -48,9 +48,7 @@
       "indexes": {
         "permission_key_unique": {
           "name": "permission_key_unique",
-          "columns": [
-            "key"
-          ],
+          "columns": ["key"],
           "isUnique": true
         }
       },
@@ -111,10 +109,7 @@
       "indexes": {
         "role_space_name_unique": {
           "name": "role_space_name_unique",
-          "columns": [
-            "space_id",
-            "name"
-          ],
+          "columns": ["space_id", "name"],
           "isUnique": true
         }
       },
@@ -123,12 +118,8 @@
           "name": "role_space_id_space_id_fk",
           "tableFrom": "role",
           "tableTo": "space",
-          "columnsFrom": [
-            "space_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["space_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -161,12 +152,8 @@
           "name": "role_permission_role_id_role_id_fk",
           "tableFrom": "role_permission",
           "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["role_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -174,22 +161,15 @@
           "name": "role_permission_permission_id_permission_id_fk",
           "tableFrom": "role_permission",
           "tableTo": "permission",
-          "columnsFrom": [
-            "permission_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["permission_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
         "role_permission_role_id_permission_id_pk": {
-          "columns": [
-            "role_id",
-            "permission_id"
-          ],
+          "columns": ["role_id", "permission_id"],
           "name": "role_permission_role_id_permission_id_pk"
         }
       },
@@ -295,10 +275,7 @@
       "indexes": {
         "space_membership_user_space_unique": {
           "name": "space_membership_user_space_unique",
-          "columns": [
-            "user_id",
-            "space_id"
-          ],
+          "columns": ["user_id", "space_id"],
           "isUnique": true
         }
       },
@@ -307,12 +284,8 @@
           "name": "space_membership_user_id_user_id_fk",
           "tableFrom": "space_membership",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -320,12 +293,8 @@
           "name": "space_membership_space_id_space_id_fk",
           "tableFrom": "space_membership",
           "tableTo": "space",
-          "columnsFrom": [
-            "space_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["space_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -333,12 +302,8 @@
           "name": "space_membership_role_id_role_id_fk",
           "tableFrom": "space_membership",
           "tableTo": "role",
-          "columnsFrom": [
-            "role_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["role_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -420,9 +385,7 @@
       "indexes": {
         "user_email_unique": {
           "name": "user_email_unique",
-          "columns": [
-            "email"
-          ],
+          "columns": ["email"],
           "isUnique": true
         }
       },

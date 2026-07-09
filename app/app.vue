@@ -3,7 +3,7 @@ const { currentSpace } = useCurrentSpace();
 
 useHead({
   htmlAttrs: {
-    "data-theme": computed(() => currentSpace.value?.theme ?? "light"),
+    "data-theme": computed(() => currentSpace.value?.theme ?? "oneeo"),
   },
 });
 </script>

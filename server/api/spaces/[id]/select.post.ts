@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
 
   const context = await resolveRequestContext(event, { spaceId: id });
   await setUserSession(event, { currentSpaceId: context.spaceId });
-  logger.info({ userId: context.userId, spaceId: context.spaceId }, "espace actif changé");
+  logger.info(
+    { userId: context.userId, spaceId: context.spaceId },
+    "espace actif changé"
+  );
 
   const db = useDb();
   const selected = await db.query.space.findFirst({

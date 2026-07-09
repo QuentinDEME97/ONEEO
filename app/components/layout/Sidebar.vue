@@ -39,9 +39,9 @@ const isActive = (path: string, exact: boolean) => {
     />
     <aside class="bg-base-200 min-h-full w-64 flex flex-col">
       <div
-        class="h-16 flex items-center px-5 border-b border-base-300 shrink-0"
+        class="h-14 flex items-center px-5 border-b border-base-300 shrink-0"
       >
-        <span class="text-xl font-bold text-primary">ONEEO</span>
+        <span class="text-xl font-bold text-neutral">ONEEO</span>
       </div>
       <div class="px-3 pt-3">
         <LayoutSpaceSwitcher />

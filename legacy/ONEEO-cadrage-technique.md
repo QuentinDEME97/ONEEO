@@ -9,39 +9,39 @@
 
 ## 1. Synthèse des décisions (TL;DR)
 
-| Sujet | Décision | En une phrase |
-|---|---|---|
-| Framework | **Nuxt 4** (plutôt que SvelteKit) | Nitro fournit nativement les **tâches planifiées** (imports périodiques + rapports), central ici. |
-| CSS / UI | **DaisyUI 5 + Tailwind CSS 4** (imposé) | Thème par projet via `@plugin "daisyui/theme"`, config 100 % en CSS. |
-| Graphes | **ApexCharts** (imposé) | Wrapper `vue3-apexcharts`, rendu *client-only*, thème synchronisé sur les variables DaisyUI. |
-| Base de données | **SQLite + Drizzle ORM** (`better-sqlite3`) | Léger, typé, migration Postgres possible sans réécrire le domaine. |
-| Jobs planifiés | **Nitro scheduled tasks** | Imports périodiques + rapports, sans cron externe. |
-| Identité / tenancy | **User → Space → Project** + RBAC scopé espace | Un espace = une entreprise ; rôles à nom libre + permissions cochables. |
-| Authentification | **`nuxt-auth-utils`** (sessions cookie) | Léger, setup admin au premier lancement, invitations par email. |
-| Validation / imports | **Zod** | Contrôles de format sur imports manuels + typage des payloads API. |
-| IA / LLM | **SDK Anthropic (Claude)** derrière un port abstrait | Un seul fournisseur au début, interface prête pour d'autres. |
-| Mail | **Nodemailer (SMTP)** — phase 3 | Envoi manuel puis automatique des comptes rendus. |
-| Architecture | **Hexagonale (ports & adapters)** | JIRA devient un simple *adapter* ; le cœur métier est agnostique de l'outil source. |
+| Sujet                | Décision                                             | En une phrase                                                                                     |
+| -------------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| Framework            | **Nuxt 4** (plutôt que SvelteKit)                    | Nitro fournit nativement les **tâches planifiées** (imports périodiques + rapports), central ici. |
+| CSS / UI             | **DaisyUI 5 + Tailwind CSS 4** (imposé)              | Thème par projet via `@plugin "daisyui/theme"`, config 100 % en CSS.                              |
+| Graphes              | **ApexCharts** (imposé)                              | Wrapper `vue3-apexcharts`, rendu _client-only_, thème synchronisé sur les variables DaisyUI.      |
+| Base de données      | **SQLite + Drizzle ORM** (`better-sqlite3`)          | Léger, typé, migration Postgres possible sans réécrire le domaine.                                |
+| Jobs planifiés       | **Nitro scheduled tasks**                            | Imports périodiques + rapports, sans cron externe.                                                |
+| Identité / tenancy   | **User → Space → Project** + RBAC scopé espace       | Un espace = une entreprise ; rôles à nom libre + permissions cochables.                           |
+| Authentification     | **`nuxt-auth-utils`** (sessions cookie)              | Léger, setup admin au premier lancement, invitations par email.                                   |
+| Validation / imports | **Zod**                                              | Contrôles de format sur imports manuels + typage des payloads API.                                |
+| IA / LLM             | **SDK Anthropic (Claude)** derrière un port abstrait | Un seul fournisseur au début, interface prête pour d'autres.                                      |
+| Mail                 | **Nodemailer (SMTP)** — phase 3                      | Envoi manuel puis automatique des comptes rendus.                                                 |
+| Architecture         | **Hexagonale (ports & adapters)**                    | JIRA devient un simple _adapter_ ; le cœur métier est agnostique de l'outil source.               |
 
 ---
 
 ## 2. Points clarifiés (arbitrages tranchés)
 
-| # | Point | Décision retenue |
-|---|---|---|
-| 1 | Framework | **Nuxt 4** (cf. §3). Bascule SvelteKit possible si l'équipe est déjà fluente en Svelte. |
-| 2 | « LA de certains types de tickets » | **= SLA**. Aucune nouvelle entité, renforce la fonctionnalité SLA. |
-| 3 | Comptes & permissions | Admin au premier lancement, RBAC scopé espace (cf. §4). En MVP tout le monde peut tout faire ; l'écran de gestion des rôles arrive post-MVP. |
-| 4 | Espaces (tenancy) | Hiérarchie **User → Space (entreprise) → Project** (cf. §4). Une instance peut héberger 1..N espaces. |
-| 5 | « Read-only » | Modèle **en 2 couches** : canonique importée (jamais éditée) vs augmentation locale (éditable). |
-| 6 | Avancement d'une EPIC | Moyenne du % des tickets (conforme spec). Méthode *simple / pondérée par charge* configurable en V1.1. |
-| 7 | Avancement d'un sprint | Deux mesures distinctes : **avancement** (pondération par statut + ratio estimé/consommé) et **atteinte de l'objectif** (cf. #8). |
-| 8 | Objectif de sprint | État final cible **par ticket** dans le workflow. Défaut : « tous les tickets en statut final ». Surchargeable ticket par ticket. |
-| 9 | SLA en jours ouvrés | **Configurable** (`calendar_mode` : ouvrés par défaut / calendaires). Calendrier + fériés paramétrables par projet. Les congés ne suspendent pas le SLA par défaut. |
-| 10 | Timesheet vs temps importés | Les worklogs **importés font foi**. Le timesheet local est comparé ; tout **écart** remonte comme incohérence. |
-| 11 | Granularité d'historisation | Snapshot de métriques par import (série temporelle) + journal des changements de champs significatifs. |
-| 12 | Entité de regroupement | Entité générique `Deliverable`, **libellé personnalisable par projet**. |
-| 13 | Capacité Dev / Test | Mapping *poste → famille de capacité* (Dev / Test / Autre), configurable par projet. |
+| #   | Point                               | Décision retenue                                                                                                                                                    |
+| --- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 1   | Framework                           | **Nuxt 4** (cf. §3). Bascule SvelteKit possible si l'équipe est déjà fluente en Svelte.                                                                             |
+| 2   | « LA de certains types de tickets » | **= SLA**. Aucune nouvelle entité, renforce la fonctionnalité SLA.                                                                                                  |
+| 3   | Comptes & permissions               | Admin au premier lancement, RBAC scopé espace (cf. §4). En MVP tout le monde peut tout faire ; l'écran de gestion des rôles arrive post-MVP.                        |
+| 4   | Espaces (tenancy)                   | Hiérarchie **User → Space (entreprise) → Project** (cf. §4). Une instance peut héberger 1..N espaces.                                                               |
+| 5   | « Read-only »                       | Modèle **en 2 couches** : canonique importée (jamais éditée) vs augmentation locale (éditable).                                                                     |
+| 6   | Avancement d'une EPIC               | Moyenne du % des tickets (conforme spec). Méthode _simple / pondérée par charge_ configurable en V1.1.                                                              |
+| 7   | Avancement d'un sprint              | Deux mesures distinctes : **avancement** (pondération par statut + ratio estimé/consommé) et **atteinte de l'objectif** (cf. #8).                                   |
+| 8   | Objectif de sprint                  | État final cible **par ticket** dans le workflow. Défaut : « tous les tickets en statut final ». Surchargeable ticket par ticket.                                   |
+| 9   | SLA en jours ouvrés                 | **Configurable** (`calendar_mode` : ouvrés par défaut / calendaires). Calendrier + fériés paramétrables par projet. Les congés ne suspendent pas le SLA par défaut. |
+| 10  | Timesheet vs temps importés         | Les worklogs **importés font foi**. Le timesheet local est comparé ; tout **écart** remonte comme incohérence.                                                      |
+| 11  | Granularité d'historisation         | Snapshot de métriques par import (série temporelle) + journal des changements de champs significatifs.                                                              |
+| 12  | Entité de regroupement              | Entité générique `Deliverable`, **libellé personnalisable par projet**.                                                                                             |
+| 13  | Capacité Dev / Test                 | Mapping _poste → famille de capacité_ (Dev / Test / Autre), configurable par projet.                                                                                |
 
 ---
 
@@ -52,6 +52,7 @@
 Les deux sont d'excellents candidats et compatibles avec les contraintes imposées. La décision se joue sur **un besoin spécifique** : des traitements serveur **planifiés et récurrents** (import JIRA périodique, rapports programmés).
 
 **Pour Nuxt 4**
+
 - **Nitro** (moteur serveur intégré) offre des **tâches planifiées natives** : imports périodiques et rapports programmés **sans infrastructure supplémentaire** (pas de cron externe ni worker séparé). Argument décisif.
 - La **séparation API / front** demandée colle exactement à Nitro (`server/api/**`) d'un côté, `pages`/`components` de l'autre.
 - Écosystème mûr pour les dashboards + wrapper **ApexCharts officiel** (`vue3-apexcharts`).
@@ -59,10 +60,11 @@ Les deux sont d'excellents candidats et compatibles avec les contraintes imposé
 - Intégration Drizzle + SQLite simple et documentée.
 
 **Pour SvelteKit**
+
 - Plus léger/rapide à l'exécution, bundles plus petits, DX très appréciée (Svelte 5).
 - **Mais** pas de planificateur intégré → il faut ajouter `node-cron` ou un worker (à contre-courant de « environnement léger »).
 
-> **Décision : Nuxt 4.** À compétence égale, il minimise l'infra et le risque pour *ce* cas d'usage. Si l'équipe connaît déjà bien Svelte, ce facteur peut renverser le choix — la §5 (architecture) reste valable dans les deux cas.
+> **Décision : Nuxt 4.** À compétence égale, il minimise l'infra et le risque pour _ce_ cas d'usage. Si l'équipe connaît déjà bien Svelte, ce facteur peut renverser le choix — la §5 (architecture) reste valable dans les deux cas.
 >
 > ⚠️ **Nuxt 4** est la version courante ; **Nuxt 3 arrête son support fin juillet 2026** → démarrer directement en Nuxt 4.
 
@@ -74,17 +76,17 @@ Les deux sont d'excellents candidats et compatibles avec les contraintes imposé
 
 ### 3.3 Reste de la stack (orienté MVP)
 
-| Besoin | Choix | Pourquoi |
-|---|---|---|
-| Persistance | **SQLite** via **Drizzle ORM** (`better-sqlite3`) | Léger, typé, migrations avec `drizzle-kit`. |
-| Portabilité BDD | **SQL portable** (éviter les spécificités SQLite) | Bascule Postgres = changement de *dialect*, domaine intact. |
-| Jobs planifiés | **Nitro scheduled tasks** | Imports périodiques + rapports, sans cron externe. |
-| Validation | **Zod** | Contrôles de format des imports + typage des I/O API. |
-| Tableaux de données | **TanStack Table** (headless) stylé DaisyUI | Tri/filtre/pagination sans imposer de style. |
-| Auth / sessions | **`nuxt-auth-utils`** | Sessions cookie légères, adapté localhost / interne. |
-| IA | **SDK Anthropic** derrière un `LlmPort` | Claude au début, interface prête pour d'autres. |
-| Mail (phase 3) | **Nodemailer** (SMTP) | Standard, simple à brancher. |
-| Outillage | **pnpm**, **TypeScript** strict, **Biome** ou ESLint+Prettier | Léger, rapide, cohérent. |
+| Besoin              | Choix                                                         | Pourquoi                                                    |
+| ------------------- | ------------------------------------------------------------- | ----------------------------------------------------------- |
+| Persistance         | **SQLite** via **Drizzle ORM** (`better-sqlite3`)             | Léger, typé, migrations avec `drizzle-kit`.                 |
+| Portabilité BDD     | **SQL portable** (éviter les spécificités SQLite)             | Bascule Postgres = changement de _dialect_, domaine intact. |
+| Jobs planifiés      | **Nitro scheduled tasks**                                     | Imports périodiques + rapports, sans cron externe.          |
+| Validation          | **Zod**                                                       | Contrôles de format des imports + typage des I/O API.       |
+| Tableaux de données | **TanStack Table** (headless) stylé DaisyUI                   | Tri/filtre/pagination sans imposer de style.                |
+| Auth / sessions     | **`nuxt-auth-utils`**                                         | Sessions cookie légères, adapté localhost / interne.        |
+| IA                  | **SDK Anthropic** derrière un `LlmPort`                       | Claude au début, interface prête pour d'autres.             |
+| Mail (phase 3)      | **Nodemailer** (SMTP)                                         | Standard, simple à brancher.                                |
+| Outillage           | **pnpm**, **TypeScript** strict, **Biome** ou ESLint+Prettier | Léger, rapide, cohérent.                                    |
 
 ---
 
@@ -258,16 +260,16 @@ flowchart TB
 
 ### 6.3 Pages
 
-| Page | Contenu clé |
-|---|---|
-| **Dashboard** | Onglets par sprint (courant + suivants) ; sélecteur d'équipe. Sections : en-tête sprint (sprint actif, nb EPIC/tickets — historisés), **avancement** + **atteinte de l'objectif**, nb tickets sous SLA, suivi EPIC (avancement, nb bugs historisé), capacités (capacité équipe, % hors congés, charge vs capacité, membres, congés + 3 prochains), incohérences. |
-| **Sprints** | Liste + détail (contenu, capacités/charges), **objectifs** (statut cible par ticket, défaut = statut final), **sprints factices** (statut spécial, exclus des dashboards). |
-| **Livrables** | Liste + **page dédiée** par livrable : avancement, tickets reliés, contenu. Libellé configurable. |
-| **Équipes** | Profils & postes (Scrum Master, PO, BA, Lead Dev, Dev, Testeur — configurables), création d'équipes, rattachement des profils, **mapping équipe SI ↔ équipe source**, capacité 7 h/j ajustable, familles Dev/Test. |
-| **Temps & Congés** | Onglets **Timesheet** (saisie, écarts vs temps importés) et **Congés** (visualisation/création, sprints impactés). |
-| **Anomalies & SLA** | Vue **transverse** (hors filtre sprint/équipe) : tickets sous SLA, états En règle / Alerte, tickets sans estimation. Lien vers la config SLA. |
-| **Rapports & IA** | Rapports générés (avancement, anomalies/SLA), **Daily Digest** (+ ignore-list), config des jobs IA (prompt éditable + historique, périodicité, envoi mail). |
-| **Paramètres** | Espace (membres, rôles post-MVP, SMTP, clé LLM) · Projet (workflow, SLA + matchers champ/étiquette/type = valeur, calendrier ouvré/fériés, pondérations de statut, connecteur JIRA, thème) · Profil (email, nom/prénom, avatar, mot de passe). |
+| Page                | Contenu clé                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Dashboard**       | Onglets par sprint (courant + suivants) ; sélecteur d'équipe. Sections : en-tête sprint (sprint actif, nb EPIC/tickets — historisés), **avancement** + **atteinte de l'objectif**, nb tickets sous SLA, suivi EPIC (avancement, nb bugs historisé), capacités (capacité équipe, % hors congés, charge vs capacité, membres, congés + 3 prochains), incohérences. |
+| **Sprints**         | Liste + détail (contenu, capacités/charges), **objectifs** (statut cible par ticket, défaut = statut final), **sprints factices** (statut spécial, exclus des dashboards).                                                                                                                                                                                       |
+| **Livrables**       | Liste + **page dédiée** par livrable : avancement, tickets reliés, contenu. Libellé configurable.                                                                                                                                                                                                                                                                |
+| **Équipes**         | Profils & postes (Scrum Master, PO, BA, Lead Dev, Dev, Testeur — configurables), création d'équipes, rattachement des profils, **mapping équipe SI ↔ équipe source**, capacité 7 h/j ajustable, familles Dev/Test.                                                                                                                                               |
+| **Temps & Congés**  | Onglets **Timesheet** (saisie, écarts vs temps importés) et **Congés** (visualisation/création, sprints impactés).                                                                                                                                                                                                                                               |
+| **Anomalies & SLA** | Vue **transverse** (hors filtre sprint/équipe) : tickets sous SLA, états En règle / Alerte, tickets sans estimation. Lien vers la config SLA.                                                                                                                                                                                                                    |
+| **Rapports & IA**   | Rapports générés (avancement, anomalies/SLA), **Daily Digest** (+ ignore-list), config des jobs IA (prompt éditable + historique, périodicité, envoi mail).                                                                                                                                                                                                      |
+| **Paramètres**      | Espace (membres, rôles post-MVP, SMTP, clé LLM) · Projet (workflow, SLA + matchers champ/étiquette/type = valeur, calendrier ouvré/fériés, pondérations de statut, connecteur JIRA, thème) · Profil (email, nom/prénom, avatar, mot de passe).                                                                                                                   |
 
 ---
 

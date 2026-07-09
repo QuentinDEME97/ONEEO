@@ -1,5 +1,11 @@
-import { inArray } from "drizzle-orm";
-import { permission, role, rolePermission, user } from "../db/schema/identity";
+import { and, eq, inArray } from "drizzle-orm";
+import {
+  permission,
+  role,
+  rolePermission,
+  spaceMembership,
+  user,
+} from "../db/schema/identity";
 import type { useDb } from "./db";
 
 export const SYSTEM_PERMISSIONS = [
@@ -73,4 +79,20 @@ export function ensureSystemRoles(db: Db, spaceId: string) {
 
 export function hasAnyUser(db: Db) {
   return Boolean(db.select({ id: user.id }).from(user).limit(1).get());
+}
+
+export function isSpaceOwner(db: Db, userId: string, spaceId: string): boolean {
+  const membership = db
+    .select({ roleName: role.name })
+    .from(spaceMembership)
+    .innerJoin(role, eq(spaceMembership.roleId, role.id))
+    .where(
+      and(
+        eq(spaceMembership.userId, userId),
+        eq(spaceMembership.spaceId, spaceId)
+      )
+    )
+    .get();
+
+  return membership?.roleName === "Owner";
 }

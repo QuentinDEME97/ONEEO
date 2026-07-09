@@ -8,7 +8,7 @@ import * as schema from "./schema";
 const db = useDb();
 
 console.log(
-  "ONEEO console — `db` (instance Drizzle) et les tables du schéma sont dans le scope.",
+  "ONEEO console — `db` (instance Drizzle) et les tables du schéma sont dans le scope."
 );
 
 const replServer = repl.start({ prompt: "oneeo> " });

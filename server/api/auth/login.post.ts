@@ -17,7 +17,10 @@ function getDummyPasswordHash() {
 export default defineEventHandler(async (event) => {
   const parsed = bodySchema.safeParse(await readBody(event));
   if (!parsed.success) {
-    logger.debug({ errors: z.treeifyError(parsed.error) }, "login: formulaire invalide");
+    logger.debug(
+      { errors: z.treeifyError(parsed.error) },
+      "login: formulaire invalide"
+    );
     throw createError({
       statusCode: 400,
       statusMessage: "Formulaire invalide.",
@@ -33,13 +36,13 @@ export default defineEventHandler(async (event) => {
 
   const passwordValid = await verifyPassword(
     userRecord?.passwordHash ?? (await getDummyPasswordHash()),
-    password,
+    password
   );
 
   if (!userRecord || !passwordValid) {
     logger.warn(
       { email, reason: userRecord ? "invalid_password" : "unknown_email" },
-      "login refusé",
+      "login refusé"
     );
     throw createError({
       statusCode: 401,
@@ -57,10 +60,11 @@ export default defineEventHandler(async (event) => {
         email: userRecord.email,
         firstName: userRecord.firstName,
         lastName: userRecord.lastName,
+        mustChangePassword: userRecord.mustChangePassword,
       },
       rememberMe,
     },
-    rememberMe ? { maxAge: SESSION_MAX_AGE } : undefined,
+    rememberMe ? { maxAge: SESSION_MAX_AGE } : undefined
   );
 
   return { message: "Connexion réussie." };

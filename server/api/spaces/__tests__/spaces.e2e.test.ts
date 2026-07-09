@@ -46,7 +46,11 @@ describe("e2e — espaces (server/api/spaces)", async () => {
         .returning()
         .get();
       tx.insert(spaceMembership)
-        .values({ userId: newUser.id, spaceId: memberSpace.id, roleId: ownerRoleId })
+        .values({
+          userId: newUser.id,
+          spaceId: memberSpace.id,
+          roleId: ownerRoleId,
+        })
         .run();
 
       const foreignSpace = tx
@@ -67,7 +71,8 @@ describe("e2e — espaces (server/api/spaces)", async () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
     });
-    cookie = (loginResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
+    cookie =
+      (loginResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
   });
 
   afterAll(() => {
@@ -80,14 +85,16 @@ describe("e2e — espaces (server/api/spaces)", async () => {
   });
 
   it("GET /api/spaces sans session renvoie 401", async () => {
-    await expect($fetch("/api/spaces")).rejects.toMatchObject({ statusCode: 401 });
+    await expect($fetch("/api/spaces")).rejects.toMatchObject({
+      statusCode: 401,
+    });
   });
 
   it("GET /api/spaces liste l'espace initial de l'utilisateur", async () => {
-    const result = await $fetch<{ spaces: { id: string }[]; currentSpaceId: string }>(
-      "/api/spaces",
-      { headers: { cookie } },
-    );
+    const result = await $fetch<{
+      spaces: { id: string }[];
+      currentSpaceId: string;
+    }>("/api/spaces", { headers: { cookie } });
     expect(result.currentSpaceId).toBe(memberSpaceId);
     expect(result.spaces.map((s) => s.id)).toEqual([memberSpaceId]);
   });
@@ -101,18 +108,22 @@ describe("e2e — espaces (server/api/spaces)", async () => {
       headers: { cookie, "content-type": "application/json" },
       body: JSON.stringify({ name: "Nouvel espace" }),
     });
-    const created = (await createResponse.json()) as { id: string; name: string };
-    cookie = (createResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? cookie;
+    const created = (await createResponse.json()) as {
+      id: string;
+      name: string;
+    };
+    cookie =
+      (createResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? cookie;
     createdSpaceId = created.id;
     expect(created.name).toBe("Nouvel espace");
 
-    const result = await $fetch<{ spaces: { id: string }[]; currentSpaceId: string }>(
-      "/api/spaces",
-      { headers: { cookie } },
-    );
+    const result = await $fetch<{
+      spaces: { id: string }[];
+      currentSpaceId: string;
+    }>("/api/spaces", { headers: { cookie } });
     expect(result.currentSpaceId).toBe(createdSpaceId);
     expect(result.spaces.map((s) => s.id).sort()).toEqual(
-      [memberSpaceId, createdSpaceId].sort(),
+      [memberSpaceId, createdSpaceId].sort()
     );
   });
 
@@ -122,7 +133,8 @@ describe("e2e — espaces (server/api/spaces)", async () => {
       headers: { cookie },
     });
     const selected = (await selectResponse.json()) as { id: string };
-    cookie = (selectResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? cookie;
+    cookie =
+      (selectResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? cookie;
     expect(selected.id).toBe(memberSpaceId);
 
     const result = await $fetch<{ currentSpaceId: string }>("/api/spaces", {
@@ -133,7 +145,10 @@ describe("e2e — espaces (server/api/spaces)", async () => {
 
   it("POST /api/spaces/:id/select vers un espace étranger renvoie 403", async () => {
     await expect(
-      $fetch(`/api/spaces/${foreignSpaceId}/select`, { method: "POST", headers: { cookie } }),
+      $fetch(`/api/spaces/${foreignSpaceId}/select`, {
+        method: "POST",
+        headers: { cookie },
+      })
     ).rejects.toMatchObject({ statusCode: 403 });
   });
 });

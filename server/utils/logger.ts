@@ -6,7 +6,11 @@ export const logger = pino({
   transport: import.meta.dev
     ? {
         target: "pino-pretty",
-        options: { colorize: true, translateTime: "HH:MM:ss", ignore: "pid,hostname" },
+        options: {
+          colorize: true,
+          translateTime: "HH:MM:ss",
+          ignore: "pid,hostname",
+        },
       }
     : undefined,
 });

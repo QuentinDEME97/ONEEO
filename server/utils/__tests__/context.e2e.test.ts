@@ -45,7 +45,11 @@ describe("e2e — contexte espace (server/utils/context.ts)", async () => {
         .returning()
         .get();
       tx.insert(spaceMembership)
-        .values({ userId: newUser.id, spaceId: memberSpace.id, roleId: memberRoleId })
+        .values({
+          userId: newUser.id,
+          spaceId: memberSpace.id,
+          roleId: memberRoleId,
+        })
         .run();
 
       const foreignSpace = tx
@@ -66,7 +70,8 @@ describe("e2e — contexte espace (server/utils/context.ts)", async () => {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ email: TEST_EMAIL, password: TEST_PASSWORD }),
     });
-    cookie = (loginResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
+    cookie =
+      (loginResponse.headers.get("set-cookie") ?? "").split(";")[0] ?? "";
   });
 
   afterAll(() => {
@@ -76,7 +81,9 @@ describe("e2e — contexte espace (server/utils/context.ts)", async () => {
   });
 
   it("GET /api/auth/me sans session renvoie 401", async () => {
-    await expect($fetch("/api/auth/me")).rejects.toMatchObject({ statusCode: 401 });
+    await expect($fetch("/api/auth/me")).rejects.toMatchObject({
+      statusCode: 401,
+    });
   });
 
   it("GET /api/auth/me avec session renvoie le spaceId de l'espace dont l'utilisateur est membre", async () => {
@@ -86,7 +93,10 @@ describe("e2e — contexte espace (server/utils/context.ts)", async () => {
 
   it("GET /api/auth/me?spaceId=<espace étranger> renvoie 403", async () => {
     await expect(
-      $fetch("/api/auth/me", { headers: { cookie }, query: { spaceId: foreignSpaceId } }),
+      $fetch("/api/auth/me", {
+        headers: { cookie },
+        query: { spaceId: foreignSpaceId },
+      })
     ).rejects.toMatchObject({ statusCode: 403 });
   });
 });

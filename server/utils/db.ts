@@ -12,7 +12,9 @@ export function useDb() {
     db = drizzle(sqlite, {
       schema,
       logger: import.meta.dev
-        ? { logQuery: (query, params) => logger.debug({ query, params }, "sql") }
+        ? {
+            logQuery: (query, params) => logger.debug({ query, params }, "sql"),
+          }
         : false,
     });
   }

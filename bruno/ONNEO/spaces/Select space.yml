@@ -5,11 +5,7 @@ info:
 
 http:
   method: POST
-  url: http://localhost:3000/api/spaces?id=90fd1d7b-a9a3-4a7f-b629-f2d4066e9f40
-  params:
-    - name: id
-      value: 90fd1d7b-a9a3-4a7f-b629-f2d4066e9f40
-      type: query
+  url: http://localhost:3000/api/spaces/90fd1d7b-a9a3-4a7f-b629-f2d4066e9f40/select
   auth: inherit
 
 settings:

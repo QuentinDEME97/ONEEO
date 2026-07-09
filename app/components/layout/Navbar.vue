@@ -16,7 +16,7 @@ const logout = async () => {
 
 <template>
   <header
-    class="navbar bg-base-100 border-b border-base-300 h-16 min-h-0 px-4 sticky top-0 z-30"
+    class="navbar bg-base-100 border-b border-base-300 h-14 min-h-0 px-4 sticky top-0 z-30"
   >
     <div class="flex-none lg:hidden">
       <label for="sidebar-drawer" class="btn btn-ghost btn-square">

@@ -8,7 +8,7 @@ interface RequestContext {
 
 export async function resolveRequestContext(
   event: H3Event,
-  opts: { spaceId?: string } = {},
+  opts: { spaceId?: string } = {}
 ): Promise<RequestContext> {
   const session = await getUserSession(event);
   const { user } = session;
@@ -25,16 +25,23 @@ export async function resolveRequestContext(
   });
 
   if (memberships.length === 0) {
-    logger.warn({ userId: user.id }, "contexte : aucun espace associé à ce compte");
+    logger.warn(
+      { userId: user.id },
+      "contexte : aucun espace associé à ce compte"
+    );
     throw createError({
       statusCode: 403,
       statusMessage: "Aucun espace associé à ce compte.",
     });
   }
 
-  const spaceId = opts.spaceId ?? session.currentSpaceId ?? memberships[0]!.spaceId;
+  const spaceId =
+    opts.spaceId ?? session.currentSpaceId ?? memberships[0]!.spaceId;
   if (!memberships.some((m) => m.spaceId === spaceId)) {
-    logger.warn({ userId: user.id, spaceId }, "contexte : accès à l'espace refusé");
+    logger.warn(
+      { userId: user.id, spaceId },
+      "contexte : accès à l'espace refusé"
+    );
     throw createError({
       statusCode: 403,
       statusMessage: "Accès à cet espace refusé.",

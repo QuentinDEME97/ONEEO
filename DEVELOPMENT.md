@@ -204,12 +204,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.7 — Utilisateurs de l'espace (création par l'admin)
 
-- [ ] **Objectif** : ajouter des membres sans email (MVP).
-- **Fichiers** : `server/api/spaces/[id]/members/*`, `app/pages/parametres/membres.vue`.
+- [x] **Objectif** : ajouter des membres sans email (MVP).
+- **Fichiers** : `server/api/spaces/[id]/members/*`, `app/pages/equipes.vue`.
 - **DoD** :
-  - [ ] L'Owner crée un utilisateur (email + mot de passe temporaire, rôle Member).
-  - [ ] Flag « mot de passe à changer » forçant le changement à la 1ʳᵉ connexion.
+  - [x] L'Owner crée un utilisateur (email + mot de passe temporaire, rôle Member).
+  - [x] Flag « mot de passe à changer » forçant le changement à la 1ʳᵉ connexion.
 - **Taille** : M · ⚠️ dép. 1.6.
+- **Note** : deux écarts assumés par rapport au texte initial de la tâche. (1) L'UI vit sur `/equipes` (table des membres + bouton de création en haut) plutôt que `/parametres/membres.vue`, à la demande explicite de l'utilisateur. (2) Le « forçage » du changement de mot de passe est réellement implémenté (page `/changer-mot-de-passe` + `server/api/auth/set-password.post.ts` + redirection dans `01-login-check.global.ts`) plutôt que juste stocké, en avance sur la tâche 1.10 (page profil) qui pourra réutiliser cet endpoint pour son propre flux de changement de mot de passe.
 
 ### 1.8 — Schéma : projet
 

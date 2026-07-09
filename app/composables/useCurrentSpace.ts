@@ -24,13 +24,16 @@ export function useCurrentSpace() {
   // sans attendre une requête client après hydratation.
   const { data, refresh } = useAsyncData<SpacesResponse | null>(
     "spaces",
-    () => (loggedIn.value ? requestFetch<SpacesResponse>("/api/spaces") : Promise.resolve(null)),
-    { watch: [loggedIn] },
+    () =>
+      loggedIn.value
+        ? requestFetch<SpacesResponse>("/api/spaces")
+        : Promise.resolve(null),
+    { watch: [loggedIn] }
   );
 
   const spaces = computed(() => data.value?.spaces ?? []);
   const currentSpace = computed(
-    () => spaces.value.find((s) => s.id === data.value?.currentSpaceId) ?? null,
+    () => spaces.value.find((s) => s.id === data.value?.currentSpaceId) ?? null
   );
 
   async function selectSpace(id: string) {

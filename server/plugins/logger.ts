@@ -11,7 +11,7 @@ export default defineNitroPlugin((nitroApp) => {
         query: getQuery(event),
         userAgent: getHeader(event, "user-agent"),
       },
-      "request:start",
+      "request:start"
     );
   });
 
@@ -26,7 +26,7 @@ export default defineNitroPlugin((nitroApp) => {
         statusCode: event.node.res.statusCode,
         durationMs: startedAt ? Date.now() - startedAt : undefined,
       },
-      "request",
+      "request"
     );
   });
 
@@ -39,6 +39,9 @@ export default defineNitroPlugin((nitroApp) => {
       return;
     }
 
-    logger.error({ err: error, method: event?.method, path: event?.path }, "unhandled error");
+    logger.error(
+      { err: error, method: event?.method, path: event?.path },
+      "unhandled error"
+    );
   });
 });

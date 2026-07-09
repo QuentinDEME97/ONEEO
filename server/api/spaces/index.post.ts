@@ -16,7 +16,10 @@ export default defineEventHandler(async (event) => {
 
   const parsed = bodySchema.safeParse(await readBody(event));
   if (!parsed.success) {
-    logger.debug({ errors: z.treeifyError(parsed.error) }, "création d'espace : formulaire invalide");
+    logger.debug(
+      { errors: z.treeifyError(parsed.error) },
+      "création d'espace : formulaire invalide"
+    );
     throw createError({
       statusCode: 400,
       statusMessage: "Formulaire invalide.",
@@ -26,7 +29,11 @@ export default defineEventHandler(async (event) => {
 
   const db = useDb();
   const created = db.transaction((tx) => {
-    const newSpace = tx.insert(space).values({ name: parsed.data.name }).returning().get();
+    const newSpace = tx
+      .insert(space)
+      .values({ name: parsed.data.name })
+      .returning()
+      .get();
     const { ownerRoleId } = ensureSystemRoles(tx, newSpace.id);
     tx.insert(spaceMembership)
       .values({ userId: user.id, spaceId: newSpace.id, roleId: ownerRoleId })

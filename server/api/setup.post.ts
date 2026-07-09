@@ -21,7 +21,10 @@ export default defineEventHandler(async (event) => {
 
   const parsed = bodySchema.safeParse(await readBody(event));
   if (!parsed.success) {
-    logger.debug({ errors: parsed.error.flatten() }, "setup: formulaire invalide");
+    logger.debug(
+      { errors: parsed.error.flatten() },
+      "setup: formulaire invalide"
+    );
     throw createError({
       statusCode: 400,
       statusMessage: "Formulaire invalide.",
@@ -53,7 +56,7 @@ export default defineEventHandler(async (event) => {
 
   logger.info(
     { userId: created.user.id, spaceId: created.space.id },
-    "premier lancement : espace et administrateur créés",
+    "premier lancement : espace et administrateur créés"
   );
 
   await setUserSession(event, {
@@ -62,6 +65,7 @@ export default defineEventHandler(async (event) => {
       email: created.user.email,
       firstName: created.user.firstName,
       lastName: created.user.lastName,
+      mustChangePassword: created.user.mustChangePassword,
     },
   });
 
