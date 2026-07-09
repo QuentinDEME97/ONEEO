@@ -24,6 +24,7 @@ export async function resolveRequestContext(
   });
 
   if (memberships.length === 0) {
+    logger.warn({ userId: user.id }, "contexte : aucun espace associé à ce compte");
     throw createError({
       statusCode: 403,
       statusMessage: "Aucun espace associé à ce compte.",
@@ -32,11 +33,14 @@ export async function resolveRequestContext(
 
   const spaceId = opts.spaceId ?? memberships[0]!.spaceId;
   if (!memberships.some((m) => m.spaceId === spaceId)) {
+    logger.warn({ userId: user.id, spaceId }, "contexte : accès à l'espace refusé");
     throw createError({
       statusCode: 403,
       statusMessage: "Accès à cet espace refusé.",
     });
   }
+
+  logger.debug({ userId: user.id, spaceId }, "contexte résolu");
 
   // La table `project` n'existe pas encore (tâche 1.8) — toujours nul pour l'instant.
   return { userId: user.id, spaceId, projectId: null };

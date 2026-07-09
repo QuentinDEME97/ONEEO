@@ -17,6 +17,7 @@ function getDummyPasswordHash() {
 export default defineEventHandler(async (event) => {
   const parsed = bodySchema.safeParse(await readBody(event));
   if (!parsed.success) {
+    logger.debug({ errors: z.treeifyError(parsed.error) }, "login: formulaire invalide");
     throw createError({
       statusCode: 400,
       statusMessage: "Formulaire invalide.",
@@ -36,11 +37,17 @@ export default defineEventHandler(async (event) => {
   );
 
   if (!userRecord || !passwordValid) {
+    logger.warn(
+      { email, reason: userRecord ? "invalid_password" : "unknown_email" },
+      "login refusé",
+    );
     throw createError({
       statusCode: 401,
       statusMessage: "Identifiants invalides.",
     });
   }
+
+  logger.info({ userId: userRecord.id, email }, "login réussi");
 
   await setUserSession(
     event,

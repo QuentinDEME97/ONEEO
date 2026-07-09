@@ -6,3 +6,4 @@
 - **`db/`** — Schéma Drizzle (`schema/`), migrations, seed et connexion SQLite.
 - **`api/`** — Endpoints Nitro (`server/api/**`). Fins : validation d'entrée puis délégation à `application/`.
 - **`utils/`** — Helpers transverses (connexion DB, contexte, crypto…) auto-importés par Nitro.
+- **`plugins/`** — Plugins Nitro (`server/plugins/**`), exécutés une fois au démarrage du serveur.
