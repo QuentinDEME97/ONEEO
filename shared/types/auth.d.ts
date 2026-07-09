@@ -5,6 +5,10 @@ declare module "#auth-utils" {
     firstName: string;
     lastName: string;
   }
+
+  interface UserSession {
+    rememberMe?: boolean;
+  }
 }
 
 export {};

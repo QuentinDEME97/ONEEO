@@ -5,6 +5,13 @@ import {
   UserCircleIcon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/vue";
+
+const { clear } = useUserSession();
+
+const logout = async () => {
+  await clear();
+  await navigateTo("/auth/login");
+};
 </script>
 
 <template>
@@ -33,7 +40,7 @@ import { HugeiconsIcon } from "@hugeicons/vue";
           class="dropdown-content menu bg-base-100 rounded-box shadow-lg w-44 p-2 mt-2 border border-base-200"
         >
           <li><NuxtLink to="/parametres/profil">Profil</NuxtLink></li>
-          <li><a>Déconnexion</a></li>
+          <li><a @click="logout">Déconnexion</a></li>
         </ul>
       </div>
     </div>

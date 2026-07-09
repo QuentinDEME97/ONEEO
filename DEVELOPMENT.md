@@ -175,11 +175,11 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.4 — Login / logout
 
-- [ ] **Objectif** : authentification classique.
+- [x] **Objectif** : authentification classique.
 - **Fichiers** : `server/api/auth/login.post.ts`, `server/api/auth/logout.post.ts`, `app/pages/login.vue`.
 - **DoD** :
-  - [ ] Login email + mot de passe → session posée ; mauvais identifiants → message clair.
-  - [ ] Logout détruit la session.
+  - [x] Login email + mot de passe → session posée ; mauvais identifiants → message clair.
+  - [x] Logout détruit la session.
 - **Taille** : S · ⚠️ dép. 1.2.
 
 ### 1.5 — Middleware d'auth + scoping espace
