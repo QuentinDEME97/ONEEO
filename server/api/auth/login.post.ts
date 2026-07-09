@@ -6,6 +6,14 @@ const bodySchema = z.object({
   rememberMe: z.boolean().optional().default(false),
 });
 
+// Hash de repli utilisé quand l'email n'existe pas, pour que verifyPassword()
+// coûte le même temps que pour un utilisateur réel (évite l'énumération par timing).
+let dummyPasswordHash: Promise<string> | undefined;
+function getDummyPasswordHash() {
+  dummyPasswordHash ??= hashPassword(crypto.randomUUID());
+  return dummyPasswordHash;
+}
+
 export default defineEventHandler(async (event) => {
   const parsed = bodySchema.safeParse(await readBody(event));
   if (!parsed.success) {
@@ -22,17 +30,17 @@ export default defineEventHandler(async (event) => {
     where: (user, { eq }) => eq(user.email, email),
   });
 
-  if (
-    !userRecord ||
-    !(await verifyPassword(userRecord.passwordHash, password))
-  ) {
+  const passwordValid = await verifyPassword(
+    userRecord?.passwordHash ?? (await getDummyPasswordHash()),
+    password,
+  );
+
+  if (!userRecord || !passwordValid) {
     throw createError({
       statusCode: 401,
       statusMessage: "Identifiants invalides.",
     });
   }
-
-  const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
 
   await setUserSession(
     event,
