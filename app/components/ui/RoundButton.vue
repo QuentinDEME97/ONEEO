@@ -54,7 +54,7 @@ const rootTag = computed(() =>
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
     :aria-label="ariaLabel"
-    class="glass-control inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
+    class="glass-control filled inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
     :class="[sizeClasses[size], elevationClasses[elevation]]"
   >
     <component :is="icon" :size="iconSize[size]" />

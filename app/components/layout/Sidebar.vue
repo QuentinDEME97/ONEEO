@@ -46,6 +46,7 @@ const isActive = (path: string, exact: boolean) => {
          arrondis, surface verre. -->
     <aside class="min-h-full w-72 p-4 flex">
       <UiCard
+        id="sidebar"
         elevation="sm"
         class="flex w-full flex-col rounded-[28px] p-4 bg-white/25"
       >
@@ -80,7 +81,7 @@ const isActive = (path: string, exact: boolean) => {
                 class="flex h-11 items-center gap-3 rounded-2xl px-3 transition-colors"
                 :class="
                   isActive(item.to, item.exact ?? false)
-                    ? 'bg-white/70 font-semibold text-neutral-800 shadow-[0_6px_16px_-6px_rgba(30,60,120,0.18)]'
+                    ? 'glass-surface glass-surface--elevation-sm text-neutral-800 shadow-[0_6px_16px_-6px_rgba(30,60,120,0.18)]'
                     : 'text-neutral-500 hover:bg-white/40'
                 "
               >

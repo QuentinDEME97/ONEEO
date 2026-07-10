@@ -3,6 +3,11 @@
   themes: all;
 }
 
+@theme {
+  --font-sans: "Urbanist", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
 @plugin "daisyui/theme" {
   name: "oneeo";
   default: false;
@@ -61,11 +66,6 @@
   --glass-elevation: 1;
 
   position: relative;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, 0.2) 90%
-  );
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
   box-shadow:
@@ -78,7 +78,23 @@
     transform 150ms,
     filter 150ms,
     box-shadow 150ms;
+
+  &.filled {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0.75) 90%
+    );
+  }
 }
+
+/* #sidebar {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.75) 90%
+  );
+} */
 
 /* Bordure en dégradé (weight Figma 0.75) : blanc opaque aux coins haut-gauche
    et bas-droite, invisible entre les deux. Un vrai `border` ne peut pas porter
@@ -185,7 +201,25 @@
 
 /* Fond de page — le verre a besoin d'un fond non uniforme pour exister
    (blur + translucidité invisibles sur du blanc pur). Teintes calées sur la
-   maquette Dashboard (lavande / bleu très clairs). */
-.bg-app-wash {
-  background: linear-gradient(160deg, #eef2fc 0%, #e7edf9 45%, #ebf1fb 100%);
+   maquette Dashboard (lavande / bleu très clairs).
+   background-attachment: fixed pour que les halos restent calés sur l'écran
+   au scroll, plutôt que de défiler avec le contenu. */
+body {
+  min-height: 100dvh;
+  background-color: #ffffff;
+  background:
+    radial-gradient(
+      1200px 650px at 100% 100%,
+      rgb(192, 27, 52, 0.2) 16%,
+      rgb(195, 207, 244, 0.2) 43%,
+      rgb(195, 207, 244, 0) 100%
+    ),
+    radial-gradient(
+      1100px 900px at 5% -5%,
+      rgb(27, 123, 192, 0.2) 16%,
+      rgb(251, 233, 241, 0.2) 43%,
+      rgb(195, 207, 244, 0.2) 100%
+    ),
+    linear-gradient(160deg, #ffffff 0%, #ffffff 100%);
+  background-attachment: fixed;
 }

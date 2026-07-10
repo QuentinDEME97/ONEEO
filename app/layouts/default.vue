@@ -7,6 +7,6 @@
         <slot />
       </main>
     </div>
-    <LayoutSidebar />
+    <!-- <LayoutSidebar /> -->
   </div>
 </template>
