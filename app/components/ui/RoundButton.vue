@@ -7,11 +7,13 @@ const props = withDefaults(
     icon: Icon;
     ariaLabel: string;
     size?: "sm" | "md" | "lg" | "xl";
+    elevation?: "sm" | "md" | "lg";
     disabled?: boolean;
     to?: RouteLocationRaw;
   }>(),
   {
     size: "md",
+    elevation: "md",
     disabled: false,
     to: undefined,
   }
@@ -31,6 +33,13 @@ const iconSize: Record<NonNullable<typeof props.size>, number> = {
   xl: 32,
 };
 
+// Multiplicateurs d'intensité d'ombre — voir .glass-control--elevation-* (main.css).
+const elevationClasses: Record<NonNullable<typeof props.elevation>, string> = {
+  sm: "glass-control--elevation-sm",
+  md: "glass-control--elevation-md",
+  lg: "glass-control--elevation-lg",
+};
+
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
 const rootTag = computed(() =>
   props.to && !props.disabled ? "NuxtLink" : "button"
@@ -46,7 +55,7 @@ const rootTag = computed(() =>
     :aria-disabled="disabled || undefined"
     :aria-label="ariaLabel"
     class="glass-control inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
-    :class="sizeClasses[size]"
+    :class="[sizeClasses[size], elevationClasses[elevation]]"
   >
     <component :is="icon" :size="iconSize[size]" />
   </component>

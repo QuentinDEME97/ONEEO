@@ -44,8 +44,16 @@
    Spec Figma : fond FFFFFF 5% + gradient 135deg (haut-gauche → bas-droite,
    transparent jusqu'à 50%, blanc opaque à 90%), bordure en gradient 0.75px,
    blur d'arrière-plan uniforme 12, ombre portée légère pour la hauteur.
+
+   Un levier exposé via custom property, pilotable depuis les composants
+   (prop `elevation`) sans dupliquer la recette :
+   - --glass-elevation : multiplicateur (1 = spec Figma) appliqué à l'alpha du
+     box-shadow et de l'ombre traversante, pour ajuster l'intensité perçue selon
+     le fond sur lequel le contrôle est posé (ex. page unie vs photo).
 --------------------------------------------------------------------------- */
 .glass-control {
+  --glass-elevation: 1;
+
   position: relative;
   background: linear-gradient(
     135deg,
@@ -56,10 +64,10 @@
   -webkit-backdrop-filter: blur(6px);
   box-shadow:
     0 0 10px 0 rgba(0, 0, 0, 0),
-    0 4px 12px 0 rgba(0, 0, 0, 0.01),
-    0 32px 24px 0 rgba(0, 0, 0, 0.01),
-    0 24px 24px 0 rgba(0, 0, 0, 0.03),
-    0 9px 24px 0 rgba(0, 0, 0, 0.05);
+    0 4px 12px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 32px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 24px 24px 0 rgba(0, 0, 0, calc(0.03 * var(--glass-elevation))),
+    0 9px 24px 0 rgba(0, 0, 0, calc(0.05 * var(--glass-elevation)));
   transition:
     transform 150ms,
     filter 150ms,
@@ -110,11 +118,25 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, calc(0.05 * var(--glass-elevation)));
   filter: blur(6px);
   transform: translateY(5px);
   z-index: -1;
   pointer-events: none;
+}
+
+/* Niveaux d'élévation — multiplient l'intensité des ombres (box-shadow +
+   ombre traversante) sans toucher au reste de la recette. 1 = spec Figma. */
+.glass-control--elevation-sm {
+  --glass-elevation: 0.4;
+}
+
+.glass-control--elevation-md {
+  --glass-elevation: 1;
+}
+
+.glass-control--elevation-lg {
+  --glass-elevation: 1.6;
 }
 
 /* États d'interaction — non spécifiés dans la maquette, volontairement discrets. */
@@ -129,9 +151,9 @@
      l'enfoncement au clic reste cohérent avec la hauteur perçue du bouton. */
   box-shadow:
     0 0 10px 0 rgba(0, 0, 0, 0),
-    0 4px 12px 0 rgba(0, 0, 0, 0.01),
-    0 32px 24px 0 rgba(0, 0, 0, 0.01),
-    0 24px 24px 0 rgba(0, 0, 0, 0.01),
+    0 4px 12px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 32px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 24px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
     0 9px 24px 0 rgba(0, 0, 0, 0);
 }
 

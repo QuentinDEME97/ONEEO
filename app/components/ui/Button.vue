@@ -4,12 +4,14 @@ import type { RouteLocationRaw } from "vue-router";
 const props = withDefaults(
   defineProps<{
     size?: "sm" | "md" | "lg";
+    elevation?: "sm" | "md" | "lg";
     disabled?: boolean;
     to?: RouteLocationRaw;
     type?: "button" | "submit" | "reset";
   }>(),
   {
     size: "md",
+    elevation: "md",
     disabled: false,
     to: undefined,
     type: "button",
@@ -21,6 +23,13 @@ const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
   sm: "h-9 px-4 text-sm",
   md: "h-11 px-5 text-base",
   lg: "h-14 px-7 text-lg",
+};
+
+// Multiplicateurs d'intensité d'ombre — voir .glass-control--elevation-* (main.css).
+const elevationClasses: Record<NonNullable<typeof props.elevation>, string> = {
+  sm: "glass-control--elevation-sm",
+  md: "glass-control--elevation-md",
+  lg: "glass-control--elevation-lg",
 };
 
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
@@ -37,7 +46,7 @@ const rootTag = computed(() =>
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
     class="glass-control inline-flex items-center justify-center gap-2 rounded-full text-neutral-600"
-    :class="sizeClasses[size]"
+    :class="[sizeClasses[size], elevationClasses[elevation]]"
   >
     <slot />
   </component>

@@ -11,8 +11,14 @@ import RoundButton from "~/components/ui/RoundButton.vue";
 <template>
   <div>
     <h1 class="text-2xl font-bold">Dashboard</h1>
-    <Button class="w-3xs mt-4 mb-4 flex align-center justify-center">
+    <Button
+      class="w-3xs mt-4 mb-4 flex align-center justify-center"
+      elevation="sm"
+    >
       <span class="w-full text-left font-thin"> Rechercher... </span>
+      <Button size="sm" elevation="sm">
+        <span class="w-full text-left font-thin">Test </span>
+      </Button>
     </Button>
     <!-- <ChartsBaseChart class="mt-4" /> -->
     <div class="container gap-14">
