@@ -24,7 +24,9 @@ const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
 };
 
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
-const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "button"));
+const rootTag = computed(() =>
+  props.to && !props.disabled ? "NuxtLink" : "button"
+);
 </script>
 
 <template>
@@ -34,7 +36,7 @@ const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "butt
     :type="rootTag === 'button' ? type : undefined"
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
-    class="glass-control inline-flex items-center justify-center gap-2 rounded-full font-medium text-white"
+    class="glass-control inline-flex items-center justify-center gap-2 rounded-full text-neutral-600"
     :class="sizeClasses[size]"
   >
     <slot />

@@ -1,13 +1,12 @@
 <script setup lang="ts">
-import type { IconArray } from "@hugeicons/vue";
-import { HugeiconsIcon } from "@hugeicons/vue";
+import type { Icon } from "@tabler/icons-vue";
 import type { RouteLocationRaw } from "vue-router";
 
 const props = withDefaults(
   defineProps<{
-    icon: IconArray;
+    icon: Icon;
     ariaLabel: string;
-    size?: "sm" | "md" | "lg";
+    size?: "sm" | "md" | "lg" | "xl";
     disabled?: boolean;
     to?: RouteLocationRaw;
   }>(),
@@ -22,16 +21,20 @@ const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
   sm: "w-9 h-9",
   md: "w-11 h-11",
   lg: "w-14 h-14",
+  xl: "w-16 h-16",
 };
 
 const iconSize: Record<NonNullable<typeof props.size>, number> = {
   sm: 16,
   md: 20,
   lg: 24,
+  xl: 32,
 };
 
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
-const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "button"));
+const rootTag = computed(() =>
+  props.to && !props.disabled ? "NuxtLink" : "button"
+);
 </script>
 
 <template>
@@ -45,6 +48,6 @@ const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "butt
     class="glass-control inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
     :class="sizeClasses[size]"
   >
-    <HugeiconsIcon :icon="icon" :size="iconSize[size]" />
+    <component :is="icon" :size="iconSize[size]" />
   </component>
 </template>

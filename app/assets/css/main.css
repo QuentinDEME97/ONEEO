@@ -47,40 +47,43 @@
 --------------------------------------------------------------------------- */
 .glass-control {
   position: relative;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0) 10%,
-      rgba(255, 255, 255, 0) 50%,
-      rgba(255, 255, 255, 1) 90%
-    ),
-    rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0.2) 90%
+  );
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   box-shadow:
-    0 6px 16px -4px rgba(0, 0, 0, 0.25),
-    0 2px 5px -2px rgba(0, 0, 0, 0.15);
+    0 0 10px 0 rgba(0, 0, 0, 0),
+    0 4px 12px 0 rgba(0, 0, 0, 0.01),
+    0 32px 24px 0 rgba(0, 0, 0, 0.01),
+    0 24px 24px 0 rgba(0, 0, 0, 0.03),
+    0 9px 24px 0 rgba(0, 0, 0, 0.05);
   transition:
     transform 150ms,
-    filter 150ms;
+    filter 150ms,
+    box-shadow 150ms;
 }
 
 /* Bordure en dégradé (weight Figma 0.75) : blanc opaque aux coins haut-gauche
    et bas-droite, invisible entre les deux. Un vrai `border` ne peut pas porter
-   de gradient en suivant un border-radius, d'où le pseudo-élément masqué. */
+   de gradient en suivant un border-radius, d'où le pseudo-élément masqué.
+   Un seul pseudo suffit : l'intérieur reste transparent (frost + blur), seul
+   l'anneau de 1px est peint. */
 .glass-control::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 0.75px;
+  padding: 1.25px;
   background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 1) 15%,
-    rgba(255, 255, 255, 0) 35%,
-    rgba(255, 255, 255, 0) 50%,
-    rgba(255, 255, 255, 0) 65%,
-    rgba(255, 255, 255, 1) 85%
+    180deg,
+    rgba(242, 242, 242, 0.9) 10%,
+    rgba(129, 129, 129, 0.25) 38%,
+    rgba(129, 129, 129, 0.25) 41%,
+    rgba(129, 129, 129, 0.25) 44%,
+    rgba(255, 255, 255, 0.9) 90%
   );
   /* Couche 1 clippée sur content-box (l'intérieur du padding), couche 2 pleine :
      l'exclusion ne laisse visible que l'anneau de padding qui porte le gradient. */
@@ -95,13 +98,41 @@
   pointer-events: none;
 }
 
+/* Ombre « traversante » : forme sombre floue à la forme du bouton, décalée vers le
+   bas. En z-index -1, elle se peint au-dessus du fond verre mais SOUS le contenu :
+   l'intérieur translucide est donc assombri (ombre vue à travers), et le débord en
+   bas se lit comme une ombre portée. Un box-shadow externe ne peut pas faire ça —
+   il est découpé hors de la border-box et n'est jamais peint sous l'élément.
+   Le backdrop-filter du parent ne floute pas ce pseudo (il fait partie du rendu de
+   l'élément, pas du backdrop), d'où le filter: blur() porté ici directement. */
+.glass-control::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: rgba(0, 0, 0, 0.05);
+  filter: blur(6px);
+  transform: translateY(5px);
+  z-index: -1;
+  pointer-events: none;
+}
+
 /* États d'interaction — non spécifiés dans la maquette, volontairement discrets. */
 .glass-control:hover {
   filter: brightness(1.15);
+  /* transform: scale(1.05); */
 }
 
 .glass-control:active {
-  transform: scale(0.96);
+  transform: scale(0.85);
+  /* Ombre contractée dans les mêmes proportions que le scale(0.85), pour que
+     l'enfoncement au clic reste cohérent avec la hauteur perçue du bouton. */
+  box-shadow:
+    0 0 10px 0 rgba(0, 0, 0, 0),
+    0 4px 12px 0 rgba(0, 0, 0, 0.01),
+    0 32px 24px 0 rgba(0, 0, 0, 0.01),
+    0 24px 24px 0 rgba(0, 0, 0, 0.01),
+    0 9px 24px 0 rgba(0, 0, 0, 0);
 }
 
 .glass-control:focus-visible {
