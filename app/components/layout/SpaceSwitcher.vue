@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { PlusSignIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/vue";
+import { IconChevronDown, IconPlus } from "@tabler/icons-vue";
 
 const CREATE_OPTION_VALUE = "__create__";
 
@@ -10,6 +9,16 @@ const selectRef = ref<HTMLSelectElement>();
 const dialogRef = ref<HTMLDialogElement>();
 const newSpaceName = ref("");
 const creating = ref(false);
+
+const initials = computed(() => {
+  const name = currentSpace.value?.name ?? "";
+  return name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0]!.toUpperCase())
+    .join("");
+});
 
 function openCreateDialog() {
   newSpaceName.value = "";
@@ -45,16 +54,42 @@ async function submitCreateSpace() {
 </script>
 
 <template>
-  <select
-    ref="selectRef"
-    class="select appearance-none w-full"
-    :value="currentSpace?.id"
-    @change="onSelectChange"
-  >
-    <option v-for="s in spaces" :key="s.id" :value="s.id">{{ s.name }}</option>
-    <option disabled>──────────</option>
-    <option :value="CREATE_OPTION_VALUE">+ Créer un espace</option>
-  </select>
+  <!-- Carte verre façon maquette ; le <select> natif invisible par-dessus
+       conserve tel quel le comportement existant (choix + création). -->
+  <div class="relative">
+    <UiCard
+      elevation="sm"
+      class="flex items-center gap-3 rounded-2xl p-2 pr-3 bg-white/40"
+    >
+      <span
+        class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500 text-sm font-semibold text-white"
+      >
+        {{ initials }}
+      </span>
+      <span class="min-w-0 flex-1">
+        <span class="block truncate font-semibold text-neutral-800">
+          {{ currentSpace?.name }}
+        </span>
+        <span class="block truncate text-xs text-neutral-400">
+          Espace de travail
+        </span>
+      </span>
+      <IconChevronDown :size="18" class="shrink-0 text-neutral-400" />
+    </UiCard>
+    <select
+      ref="selectRef"
+      class="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+      aria-label="Changer d'espace"
+      :value="currentSpace?.id"
+      @change="onSelectChange"
+    >
+      <option v-for="s in spaces" :key="s.id" :value="s.id">
+        {{ s.name }}
+      </option>
+      <option disabled>──────────</option>
+      <option :value="CREATE_OPTION_VALUE">+ Créer un espace</option>
+    </select>
+  </div>
 
   <Teleport to="body">
     <dialog ref="dialogRef" class="modal">
@@ -82,7 +117,7 @@ async function submitCreateSpace() {
               Annuler
             </button>
             <button type="submit" class="btn btn-primary" :disabled="creating">
-              <HugeiconsIcon :icon="PlusSignIcon" :size="16" />
+              <IconPlus :size="16" />
               Créer
             </button>
           </div>

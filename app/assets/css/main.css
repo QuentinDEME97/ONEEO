@@ -39,8 +39,13 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Design system glassmorphisme — recette partagée des contrôles verre,
-   consommée par app/components/ui/ (Button, RoundButton).
+   Design system glassmorphisme — recette partagée des surfaces verre,
+   consommée par app/components/ui/.
+   Deux classes pour un même rendu :
+   - .glass-surface : la recette seule, pour les éléments statiques ou champs
+     (Card, Input) — pas de réaction au survol ni d'enfoncement au clic.
+   - .glass-control : la recette + les états d'interaction (hover, active),
+     pour les éléments cliquables (Button, RoundButton).
    Spec Figma : fond FFFFFF 5% + gradient 135deg (haut-gauche → bas-droite,
    transparent jusqu'à 50%, blanc opaque à 90%), bordure en gradient 0.75px,
    blur d'arrière-plan uniforme 12, ombre portée légère pour la hauteur.
@@ -51,6 +56,7 @@
      box-shadow et de l'ombre traversante, pour ajuster l'intensité perçue selon
      le fond sur lequel le contrôle est posé (ex. page unie vs photo).
 --------------------------------------------------------------------------- */
+.glass-surface,
 .glass-control {
   --glass-elevation: 1;
 
@@ -79,6 +85,7 @@
    de gradient en suivant un border-radius, d'où le pseudo-élément masqué.
    Un seul pseudo suffit : l'intérieur reste transparent (frost + blur), seul
    l'anneau de 1px est peint. */
+.glass-surface::before,
 .glass-control::before {
   content: "";
   position: absolute;
@@ -113,6 +120,7 @@
    il est découpé hors de la border-box et n'est jamais peint sous l'élément.
    Le backdrop-filter du parent ne floute pas ce pseudo (il fait partie du rendu de
    l'élément, pas du backdrop), d'où le filter: blur() porté ici directement. */
+.glass-surface::after,
 .glass-control::after {
   content: "";
   position: absolute;
@@ -126,15 +134,19 @@
 }
 
 /* Niveaux d'élévation — multiplient l'intensité des ombres (box-shadow +
-   ombre traversante) sans toucher au reste de la recette. 1 = spec Figma. */
+   ombre traversante) sans toucher au reste de la recette. 1 = spec Figma.
+   (Les deux noms sont équivalents ; --surface pour les éléments statiques.) */
+.glass-surface--elevation-sm,
 .glass-control--elevation-sm {
   --glass-elevation: 0.4;
 }
 
+.glass-surface--elevation-md,
 .glass-control--elevation-md {
   --glass-elevation: 1;
 }
 
+.glass-surface--elevation-lg,
 .glass-control--elevation-lg {
   --glass-elevation: 1.6;
 }
@@ -157,13 +169,23 @@
     0 9px 24px 0 rgba(0, 0, 0, 0);
 }
 
+.glass-surface:focus-visible,
 .glass-control:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.7);
   outline-offset: 2px;
 }
 
+.glass-surface:disabled,
+.glass-surface[aria-disabled="true"],
 .glass-control:disabled,
 .glass-control[aria-disabled="true"] {
   opacity: 0.4;
   pointer-events: none;
+}
+
+/* Fond de page — le verre a besoin d'un fond non uniforme pour exister
+   (blur + translucidité invisibles sur du blanc pur). Teintes calées sur la
+   maquette Dashboard (lavande / bleu très clairs). */
+.bg-app-wash {
+  background: linear-gradient(160deg, #eef2fc 0%, #e7edf9 45%, #ebf1fb 100%);
 }
