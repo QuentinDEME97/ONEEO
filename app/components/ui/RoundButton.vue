@@ -86,12 +86,14 @@ const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "butt
     rgba(255, 255, 255, 0) 65%,
     rgba(255, 255, 255, 1) 85%
   );
+  /* Couche 1 clippée sur content-box (l'intérieur du padding), couche 2 pleine :
+     l'exclusion ne laisse visible que l'anneau de padding qui porte le gradient. */
   -webkit-mask:
-    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask:
-    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0) content-box,
     linear-gradient(#fff 0 0);
   mask-composite: exclude;
   pointer-events: none;
