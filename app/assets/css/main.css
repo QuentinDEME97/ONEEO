@@ -37,3 +37,80 @@
   --depth: 1;
   --noise: 0;
 }
+
+/* ---------------------------------------------------------------------------
+   Design system glassmorphisme — recette partagée des contrôles verre,
+   consommée par app/components/ui/ (Button, RoundButton).
+   Spec Figma : fond FFFFFF 5% + gradient 135deg (haut-gauche → bas-droite,
+   transparent jusqu'à 50%, blanc opaque à 90%), bordure en gradient 0.75px,
+   blur d'arrière-plan uniforme 12, ombre portée légère pour la hauteur.
+--------------------------------------------------------------------------- */
+.glass-control {
+  position: relative;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0) 10%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 1) 90%
+    ),
+    rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow:
+    0 6px 16px -4px rgba(0, 0, 0, 0.25),
+    0 2px 5px -2px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 150ms,
+    filter 150ms;
+}
+
+/* Bordure en dégradé (weight Figma 0.75) : blanc opaque aux coins haut-gauche
+   et bas-droite, invisible entre les deux. Un vrai `border` ne peut pas porter
+   de gradient en suivant un border-radius, d'où le pseudo-élément masqué. */
+.glass-control::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.75px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 15%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0) 65%,
+    rgba(255, 255, 255, 1) 85%
+  );
+  /* Couche 1 clippée sur content-box (l'intérieur du padding), couche 2 pleine :
+     l'exclusion ne laisse visible que l'anneau de padding qui porte le gradient. */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* États d'interaction — non spécifiés dans la maquette, volontairement discrets. */
+.glass-control:hover {
+  filter: brightness(1.15);
+}
+
+.glass-control:active {
+  transform: scale(0.96);
+}
+
+.glass-control:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.glass-control:disabled,
+.glass-control[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}

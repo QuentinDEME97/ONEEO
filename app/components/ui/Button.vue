@@ -1,33 +1,26 @@
 <script setup lang="ts">
-import type { IconArray } from "@hugeicons/vue";
-import { HugeiconsIcon } from "@hugeicons/vue";
 import type { RouteLocationRaw } from "vue-router";
 
 const props = withDefaults(
   defineProps<{
-    icon: IconArray;
-    ariaLabel: string;
     size?: "sm" | "md" | "lg";
     disabled?: boolean;
     to?: RouteLocationRaw;
+    type?: "button" | "submit" | "reset";
   }>(),
   {
     size: "md",
     disabled: false,
     to: undefined,
+    type: "button",
   }
 );
 
+// Hauteurs alignées sur les diamètres de RoundButton (36/44/56px).
 const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
-  sm: "w-9 h-9",
-  md: "w-11 h-11",
-  lg: "w-14 h-14",
-};
-
-const iconSize: Record<NonNullable<typeof props.size>, number> = {
-  sm: 16,
-  md: 20,
-  lg: 24,
+  sm: "h-9 px-4 text-sm",
+  md: "h-11 px-5 text-base",
+  lg: "h-14 px-7 text-lg",
 };
 
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
@@ -38,13 +31,12 @@ const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "butt
   <component
     :is="rootTag"
     :to="rootTag === 'NuxtLink' ? to : undefined"
-    :type="rootTag === 'button' ? 'button' : undefined"
+    :type="rootTag === 'button' ? type : undefined"
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
-    :aria-label="ariaLabel"
-    class="glass-control inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
+    class="glass-control inline-flex items-center justify-center gap-2 rounded-full font-medium text-white"
     :class="sizeClasses[size]"
   >
-    <HugeiconsIcon :icon="icon" :size="iconSize[size]" />
+    <slot />
   </component>
 </template>
