@@ -2,7 +2,9 @@
 import { IconCircle } from "@tabler/icons-vue";
 const { clear } = useUserSession();
 
-const logout = async () => {
+// Préfixé `_` en attendant d'être rebranché sur le futur menu utilisateur
+// (règle lint no-unused-vars).
+const _logout = async () => {
   await clear();
   await navigateTo("/login");
 };
