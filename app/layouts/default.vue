@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer lg:drawer-open min-h-screen bg-app-wash">
+  <div class="drawer lg:drawer-open min-h-screen">
     <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <LayoutNavbar />

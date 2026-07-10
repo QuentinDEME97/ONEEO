@@ -8,34 +8,15 @@ const props = withDefaults(
     icon: IconArray;
     ariaLabel: string;
     size?: "sm" | "md" | "lg";
-    variant?: "glass" | "ghost" | "primary-solid";
     disabled?: boolean;
     to?: RouteLocationRaw;
   }>(),
   {
     size: "md",
-    variant: "glass",
     disabled: false,
     to: undefined,
   }
 );
-
-const variantClasses: Record<NonNullable<typeof props.variant>, string[]> = {
-  glass: [
-    "bg-glass-fill-strong backdrop-blur-glass border border-glass-border text-white",
-    "shadow-glass-sm hover:brightness-110 active:scale-95",
-    "disabled:opacity-40",
-  ],
-  ghost: [
-    "text-base-content hover:bg-glass-fill-subtle active:bg-glass-fill/50 active:scale-95",
-    "disabled:opacity-40",
-  ],
-  "primary-solid": [
-    "bg-linear-to-b from-glass-primary-from to-glass-primary-to text-glass-primary-content",
-    "shadow-glass-primary hover:brightness-105 active:scale-95 active:brightness-95",
-    "disabled:opacity-50 disabled:shadow-none",
-  ],
-};
 
 const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
   sm: "w-9 h-9",
@@ -51,15 +32,6 @@ const iconSize: Record<NonNullable<typeof props.size>, number> = {
 
 // NuxtLink n'a pas de `disabled` natif : on retombe sur <button> pour bloquer la navigation.
 const rootTag = computed(() => (props.to && !props.disabled ? "NuxtLink" : "button"));
-
-const classes = computed(() => [
-  "inline-flex items-center justify-center rounded-full aspect-square shrink-0",
-  "transition-[background-color,box-shadow,filter,transform] duration-150",
-  "disabled:pointer-events-none",
-  "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-glass-primary-to",
-  ...variantClasses[props.variant],
-  sizeClasses[props.size],
-]);
 </script>
 
 <template>
@@ -70,8 +42,78 @@ const classes = computed(() => [
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
     :aria-label="ariaLabel"
-    :class="classes"
+    class="round-glass-btn relative inline-flex items-center justify-center rounded-full aspect-square shrink-0 text-white"
+    :class="sizeClasses[size]"
   >
     <HugeiconsIcon :icon="icon" :size="iconSize[size]" />
   </component>
 </template>
+
+<style scoped>
+/* Recette Figma : fond FFFFFF 5% + gradient haut-gauche → bas-droite par-dessus
+   (transparent jusqu'à 50%, blanc opaque à 90%), blur d'arrière-plan uniforme 12. */
+.round-glass-btn {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0) 10%,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 1) 90%
+    ),
+    rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform 150ms,
+    filter 150ms;
+}
+
+/* Bordure en dégradé (weight Figma 0.75) : blanc opaque aux coins haut-gauche et
+   bas-droite, invisible entre les deux. Un vrai `border` ne peut pas porter de
+   gradient sur un cercle, d'où le pseudo-élément masqué (mask-composite) qui ne
+   laisse visible que l'anneau de 0.75px. */
+.round-glass-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 0.75px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 1) 15%,
+    rgba(255, 255, 255, 0) 35%,
+    rgba(255, 255, 255, 0) 50%,
+    rgba(255, 255, 255, 0) 65%,
+    rgba(255, 255, 255, 1) 85%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) padding-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* États d'interaction — non spécifiés dans la maquette, volontairement discrets. */
+.round-glass-btn:hover {
+  filter: brightness(1.15);
+}
+
+.round-glass-btn:active {
+  transform: scale(0.96);
+}
+
+.round-glass-btn:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.round-glass-btn:disabled,
+.round-glass-btn[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+</style>
