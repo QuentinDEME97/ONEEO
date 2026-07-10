@@ -1,45 +1,172 @@
 <script setup lang="ts">
+import {
+  IconAlertTriangle,
+  IconChartHistogram,
+  IconClockExclamation,
+  IconLock,
+  IconSparkles,
+} from "@tabler/icons-vue";
+
 const { user } = useUserSession();
+
+const stats = [
+  {
+    label: "Avancement réel",
+    value: "62%",
+    hint: "-12 pts vs objectif",
+    variant: "blue",
+  },
+  {
+    label: "Objectif à date",
+    value: "74%",
+    hint: "Rythme attendu",
+    variant: "blue",
+  },
+  {
+    label: "Capacité restante",
+    value: "148 h",
+    hint: "-17 h - Congés déduits",
+    variant: "sand",
+  },
+  {
+    label: "Capacité restante",
+    value: "148 h",
+    hint: "-17 h - Congés déduits",
+    variant: "mint",
+  },
+] as const;
+
+const alerts = [
+  {
+    variant: "sand",
+    icon: IconAlertTriangle,
+    title: "3 tâches sans estimation",
+    desc: "Non chiffrées, invisible au burndown",
+  },
+  {
+    variant: "pink",
+    icon: IconLock,
+    title: "EC-142 bloquée depuis 4 jours",
+    desc: "“En attente API” - aucun mouvement",
+  },
+  {
+    variant: "pink",
+    icon: IconClockExclamation,
+    title: "Délai de traitement dépassé",
+    desc: "2 tickets au-delà du seuil de 3 jours",
+  },
+] as const;
 </script>
 
 <template>
-  <div class="relative px-16">
-    <!-- Formes décoratives d'arrière-plan (cf. maquette) : rectangle gris à
-         gauche derrière les cartes de stats, rectangle rayé bleu à droite
-         derrière la colonne Alertes. Peintes avant le contenu, donc dessous. -->
-    <div aria-hidden="true" class="deco deco-gray" />
-    <div aria-hidden="true" class="deco deco-stripes" />
-
-    <div class="relative">
-      <p class="text-2xl text-neutral-800">
-        Bonjour {{ user?.firstName }}, on en est où ?
-      </p>
-      <h1 class="text-5xl font-bold tracking-tight text-neutral-950">
-        Sprint 24, <span class="text-gradient">on est à mi-course.</span>
-      </h1>
-
-      <!-- <ChartsBaseChart class="mt-4" /> -->
-      <!-- <div class="container gap-14 mt-6">
-        <RoundButton
-          class="mt-4 glass-btn"
-          aria-label="Round Button"
-          :icon="IconPlayerSkipBackFilled"
-          size="xl"
-        />
-        <RoundButton
-          class="mt-4 glass-btn"
-          aria-label="Round Button"
-          :icon="IconPlayerPauseFilled"
-          size="xl"
-        />
-        <RoundButton
-          class="mt-4 glass-btn"
-          aria-label="Round Button"
-          :icon="IconPlayerSkipForwardFilled"
-          size="xl"
-        />
-      </div> -->
+  <div class="px-16">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-2xl text-neutral-800">
+          Bonjour {{ user?.firstName }}, on en est où ?
+        </p>
+        <h1 class="text-5xl font-bold tracking-tight text-neutral-950">
+          Sprint 24, <span class="text-gradient">on est à mi-course.</span>
+        </h1>
+      </div>
+      <div class="flex shrink-0 items-center gap-3 pb-1">
+        <UiChip size="sm" class="gap-2 text-neutral-600">
+          <span class="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+          JIRA sync. il y a 6 min
+        </UiChip>
+        <UiButton size="sm" elevation="sm" class="filled">
+          <IconSparkles :size="16" />
+          Compte rendu IA
+        </UiButton>
+      </div>
     </div>
+
+    <!-- Rangée des cartes de stats, posée sur le rectangle gris décoratif. -->
+    <section class="relative mt-10">
+      <div aria-hidden="true" class="deco deco-gray" />
+      <!-- z-10 : au-dessus des formes décoratives, y compris celles ancrées
+           dans la section suivante (les rayures remontent derrière la carte
+           mint). -->
+      <div
+        class="relative z-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4"
+      >
+        <UiStatCard
+          v-for="(stat, i) in stats"
+          :key="i"
+          :label="stat.label"
+          :value="stat.value"
+          :hint="stat.hint"
+          :variant="stat.variant"
+          :icon="IconChartHistogram"
+        />
+      </div>
+    </section>
+
+    <!-- Burndown + Alertes automatiques. -->
+    <section class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]">
+      <UiCard elevation="sm" class="glass-tint-neutral rounded-[28px] p-6">
+        <h2 class="text-xl font-bold text-neutral-900">Burndown du sprint</h2>
+        <p class="text-sm text-neutral-500">Points restants - réel vs idéal</p>
+        <!-- Futur graphique (ChartsBaseChart) -->
+        <div class="h-72" />
+      </UiCard>
+
+      <div class="relative">
+        <div aria-hidden="true" class="deco deco-stripes" />
+        <UiCard elevation="sm" class="z-10 glass-tint-neutral rounded-[28px] p-6">
+          <div class="flex items-center justify-between gap-3">
+            <h2 class="text-xl font-bold text-neutral-900">
+              Alertes automatiques
+            </h2>
+            <UiChip variant="pink" size="sm" class="text-rose-900/80">
+              5 actives
+            </UiChip>
+          </div>
+          <ul class="mt-5 flex flex-col gap-3">
+            <li
+              v-for="(alert, i) in alerts"
+              :key="i"
+              class="glass-surface glass-surface--elevation-sm flex items-center gap-3 rounded-2xl p-3"
+              :class="`glass-tint-${alert.variant}`"
+            >
+              <UiChip round size="sm" class="shrink-0 text-white">
+                <component :is="alert.icon" :size="18" />
+              </UiChip>
+              <div class="min-w-0">
+                <p class="truncate font-semibold text-neutral-900">
+                  {{ alert.title }}
+                </p>
+                <p class="truncate text-sm text-neutral-600">
+                  {{ alert.desc }}
+                </p>
+              </div>
+            </li>
+          </ul>
+        </UiCard>
+      </div>
+    </section>
+
+    <!-- <ChartsBaseChart class="mt-4" /> -->
+    <!-- <div class="container gap-14 mt-6">
+      <RoundButton
+        class="mt-4 glass-btn"
+        aria-label="Round Button"
+        :icon="IconPlayerSkipBackFilled"
+        size="xl"
+      />
+      <RoundButton
+        class="mt-4 glass-btn"
+        aria-label="Round Button"
+        :icon="IconPlayerPauseFilled"
+        size="xl"
+      />
+      <RoundButton
+        class="mt-4 glass-btn"
+        aria-label="Round Button"
+        :icon="IconPlayerSkipForwardFilled"
+        size="xl"
+      />
+    </div> -->
   </div>
 </template>
 
@@ -71,13 +198,13 @@ const { user } = useUserSession();
   pointer-events: none;
 }
 
-/* Rectangle gris : démarre sous le titre, déborde derrière les deux
-   premières cartes de stats (elles viendront se poser dessus). */
+/* Rectangle gris : ancré à la rangée de stats, déborde au-dessus et en
+   dessous des deux premières cartes qui viennent se poser dessus. */
 .deco-gray {
-  left: 5%;
-  top: 100%;
-  width: 46%;
-  height: 380px;
+  left: 24px;
+  top: -28px;
+  width: 48%;
+  height: calc(100% + 64px);
   border-radius: 28px;
   background: linear-gradient(
     -32deg,
@@ -86,13 +213,13 @@ const { user } = useUserSession();
   );
 }
 
-/* Rectangle rayé bleu : colonne de droite, derrière la carte verte et le
-   panneau Alertes. Rayures fines en « / » (135deg). */
+/* Rectangle rayé bleu : ancré à la colonne Alertes, remonte derrière la
+   carte mint et déborde à droite et en dessous. Rayures fines en « / ». */
 .deco-stripes {
-  right: 5%;
-  top: 150%;
-  width: 26%;
-  height: 640px;
+  right: -32px;
+  top: -230px;
+  width: 90%;
+  height: calc(100% + 270px);
   border-radius: 28px;
   background: repeating-linear-gradient(
     -135deg,
