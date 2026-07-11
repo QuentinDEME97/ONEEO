@@ -81,15 +81,10 @@ const alerts = [
       </div>
     </div>
 
-    <!-- Rangée des cartes de stats, posée sur le rectangle gris décoratif. -->
-    <section class="relative mt-10">
-      <div aria-hidden="true" class="deco deco-gray" />
-      <!-- z-10 : au-dessus des formes décoratives, y compris celles ancrées
-           dans la section suivante (les rayures remontent derrière la carte
-           mint). -->
-      <div
-        class="relative z-10 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4"
-      >
+    <!-- Rangée des cartes de stats (le rectangle gris du fond de page passe
+         derrière — voir .page-background dans main.css). -->
+    <section class="mt-10">
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <UiStatCard
           v-for="(stat, i) in stats"
           :key="i"
@@ -111,9 +106,8 @@ const alerts = [
         <div class="h-72" />
       </UiCard>
 
-      <div class="relative">
-        <div aria-hidden="true" class="deco deco-stripes" />
-        <UiCard elevation="sm" class="z-10 glass-tint-neutral rounded-[28px] p-6">
+      <div>
+        <UiCard elevation="sm" class="glass-tint-neutral rounded-[28px] p-6">
           <div class="flex items-center justify-between gap-3">
             <h2 class="text-xl font-bold text-neutral-900">
               Alertes automatiques
@@ -191,40 +185,5 @@ const alerts = [
 
 .glass-btn {
   margin-top: -2rem;
-}
-
-.deco {
-  position: absolute;
-  pointer-events: none;
-}
-
-/* Rectangle gris : ancré à la rangée de stats, déborde au-dessus et en
-   dessous des deux premières cartes qui viennent se poser dessus. */
-.deco-gray {
-  left: 24px;
-  top: -28px;
-  width: 48%;
-  height: calc(100% + 64px);
-  border-radius: 28px;
-  background: linear-gradient(
-    -32deg,
-    rgb(173, 173, 173, 0.08),
-    rgba(128, 128, 128, 0.08)
-  );
-}
-
-/* Rectangle rayé bleu : ancré à la colonne Alertes, remonte derrière la
-   carte mint et déborde à droite et en dessous. Rayures fines en « / ». */
-.deco-stripes {
-  right: -32px;
-  top: -230px;
-  width: 90%;
-  height: calc(100% + 270px);
-  border-radius: 28px;
-  background: repeating-linear-gradient(
-    -135deg,
-    rgba(78, 166, 255, 1) 0 2px,
-    transparent 2px 8px
-  );
 }
 </style>

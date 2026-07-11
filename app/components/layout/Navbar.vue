@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { IconCircle } from "@tabler/icons-vue";
 const { clear } = useUserSession();
 
 // Préfixé `_` en attendant d'être rebranché sur le futur menu utilisateur
@@ -8,6 +7,74 @@ const _logout = async () => {
   await clear();
   await navigateTo("/login");
 };
+
+const navItems = [
+  { to: "/", label: "Dashboard", exact: true },
+  { to: "/sprints", label: "Sprints" },
+  { to: "/equipes", label: "Equipes" },
+  { to: "/temps-conges", label: "Temps & congés" },
+  { to: "/anomalies", label: "Anomalies & SLA" },
+];
+
+const route = useRoute();
+
+const isActive = (path: string, exact = false) => {
+  if (exact) return route.path === path;
+  return route.path === path || route.path.startsWith(path + "/");
+};
+
+const activeIndex = computed(() =>
+  navItems.findIndex((item) => isActive(item.to, item.exact))
+);
+
+// Pilule coulissante : un seul élément décoratif positionné en absolu dans la
+// nav, dont left/width sont mesurés sur le lien actif. La transition CSS fait
+// glisser la pilule d'un lien à l'autre au changement de route.
+const navRef = ref<HTMLElement>();
+const linkEls = ref<(HTMLElement | null)[]>([]);
+
+function setLinkRef(el: unknown, index: number) {
+  // NuxtLink expose l'élément DOM via $el (ref de composant, pas d'élément).
+  const maybe = el as { $el?: HTMLElement } | HTMLElement | null;
+  linkEls.value[index] =
+    maybe && "$el" in (maybe as object)
+      ? ((maybe as { $el?: HTMLElement }).$el ?? null)
+      : ((maybe as HTMLElement) ?? null);
+}
+
+const pillStyle = ref({ left: "0px", width: "0px", opacity: "0" });
+
+function updatePill() {
+  const nav = navRef.value;
+  const el = linkEls.value[activeIndex.value];
+  if (!nav || !el || activeIndex.value < 0) {
+    pillStyle.value = { ...pillStyle.value, opacity: "0" };
+    return;
+  }
+  const navRect = nav.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
+  pillStyle.value = {
+    left: `${rect.left - navRect.left}px`,
+    width: `${rect.width}px`,
+    opacity: "1",
+  };
+}
+
+watch(
+  () => route.path,
+  () => nextTick(updatePill)
+);
+
+onMounted(() => {
+  updatePill();
+  // Les largeurs de texte changent quand la webfont arrive : on re-mesure.
+  document.fonts?.ready.then(updatePill);
+  window.addEventListener("resize", updatePill);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updatePill);
+});
 </script>
 
 <template>
@@ -15,25 +82,31 @@ const _logout = async () => {
     <div class="flex items-center gap-2">
       <div
         class="glass-control glass-control--elevation-md w-14 h-14 flex items-center justify-center rounded-full text-white text-4xl font-medium"
-        :icon="IconCircle"
         aria-label="Oneeo"
-        size="lg"
-        elevation="md"
       >
         <span id="logo">O</span>
       </div>
       <span class="font-semibold text-2xl">ONEEO</span>
     </div>
     <nav
-      class="flex text-xl font-light w-fit items-center gap-6 px-6 py-3 glass-control glass-control--elevation-sm rounded-full"
+      ref="navRef"
+      class="relative flex text-xl font-light w-fit items-center gap-6 px-6 py-3 glass-control glass-control--elevation-sm rounded-full"
     >
-      <a id="join-btn" class="glass-control py-2 px-3 rounded-full" href="/"
-        >Dashboard</a
+      <span aria-hidden="true" class="nav-pill glass-surface" :style="pillStyle" />
+      <NuxtLink
+        v-for="(item, i) in navItems"
+        :key="item.to"
+        :ref="(el) => setLinkRef(el, i)"
+        :to="item.to"
+        class="relative z-10 rounded-full py-2 px-3 transition-colors duration-300"
+        :class="
+          isActive(item.to, item.exact)
+            ? 'text-neutral-900'
+            : 'text-gray-500 hover:text-neutral-700'
+        "
       >
-      <a class="text-gray-500" href="/about">Sprints</a>
-      <a class="text-gray-500" href="/contact">Equipes</a>
-      <a class="text-gray-500" href="/contact">Temps & congés</a>
-      <a class="text-gray-500" href="/contact">Anomalies & SLA</a>
+        {{ item.label }}
+      </NuxtLink>
     </nav>
     <div class="space-selector"></div>
   </header>
@@ -47,12 +120,21 @@ const _logout = async () => {
   text-shadow: 0 3px 5px rgba(77, 195, 255, 0.2);
 }
 
-#join-btn {
+/* Pilule de sélection (ex #join-btn) : purement décorative, elle glisse vers
+   le lien actif via la transition sur left/width. */
+.nav-pill {
+  position: absolute;
+  top: 50%;
+  height: calc(100% - 24px);
+  translate: 0 -50%;
+  border-radius: 9999px;
   background-color: rgba(77, 166, 255, 0.12) !important;
-  color: #121212;
+  transition:
+    left 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    width 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 150ms;
 
-  &.glass-surface::before,
-  &.glass-control::before {
+  &.glass-surface::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -77,11 +159,7 @@ const _logout = async () => {
     pointer-events: none;
   }
 
-  &.glass-surface,
-  &.glass-control {
-    --glass-elevation: 1;
-
-    position: relative;
+  &.glass-surface {
     background: linear-gradient(
       135deg,
       rgba(77, 166, 255, 0) 50%,
@@ -89,16 +167,6 @@ const _logout = async () => {
     );
     backdrop-filter: blur(6px);
     -webkit-backdrop-filter: blur(6px);
-    box-shadow:
-      0 0 10px 0 rgba(0, 0, 0, 0),
-      0 4px 12px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
-      0 32px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
-      0 24px 24px 0 rgba(0, 0, 0, calc(0.03 * var(--glass-elevation))),
-      0 9px 24px 0 rgba(0, 0, 0, calc(0.05 * var(--glass-elevation)));
-    transition:
-      transform 150ms,
-      filter 150ms,
-      box-shadow 150ms;
   }
 }
 </style>
