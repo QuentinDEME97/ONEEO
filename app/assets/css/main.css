@@ -86,6 +86,11 @@
       rgba(255, 255, 255, 0.75) 90%
     );
   }
+
+  &.backdrop-filter-none {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
 }
 
 /* #sidebar {
@@ -149,6 +154,19 @@
   pointer-events: none;
 }
 
+.chip  {
+  &.glass-surface {
+    &.glass-tint-blue::before {
+      background: linear-gradient(
+        180deg,
+        #e6f2ff 10%,
+        rgba(5, 130, 255, 0.2) 41%,
+        #e6f2ff 90%
+      );
+    }
+  }
+}
+
 /* Niveaux d'élévation — multiplient l'intensité des ombres (box-shadow +
    ombre traversante) sans toucher au reste de la recette. 1 = spec Figma.
    (Les deux noms sont équivalents ; --surface pour les éléments statiques.) */
@@ -209,17 +227,25 @@
     rgba(255, 255, 255, 0.5) 0%,
     rgba(242, 242, 242, 0.5) 100%
   );
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(242, 242, 242, 0.1),
+      0 20px 25px -5px rgba(242, 242, 242, 0.1);
+  }
 }
 
 .blurry-card {
   backdrop-filter: blur(6px);
   border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 10px -6px rgba(242, 242, 242, 0.5),
+    0 20px 25px -5px rgba(242, 242, 242, 0.5);
 }
 
 .shadow-card {
   box-shadow:
-    0 8px 10px -6px rgba(0, 0, 0, 0.1),
-    0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    0 8px 10px -6px rgba(100, 100, 100, 0.1),
+    0 20px 25px -5px rgba(100, 100, 100, 0.1);
 }
 
 .glass-tint-blue {
@@ -228,6 +254,12 @@
     rgba(0, 89, 178, 0.25) 0%,
     rgba(77, 166, 255, 0.25) 100%
   );
+
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(77, 166, 255, 0.1),
+      0 20px 25px -5px rgba(77, 166, 255, 0.1);
+  }
 }
 
 .glass-tint-sand {
@@ -236,6 +268,12 @@
     rgba(255, 136, 0, 0.25) 0%,
     rgba(254, 186, 92, 0.25) 100%
   );
+
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(254, 186, 92, 0.1),
+      0 20px 25px -5px rgba(254, 186, 92, 0.1);
+  }
 }
 
 .glass-tint-mint {
@@ -244,6 +282,11 @@
     rgba(0, 178, 104, 0.25) 0%,
     rgba(77, 255, 166, 0.25) 100%
   );
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(77, 255, 166, 0.1),
+      0 20px 25px -5px rgba(77, 255, 166, 0.1);
+  }
 }
 
 .glass-tint-pink {
@@ -266,6 +309,7 @@
    (car :root porte déjà le fond DaisyUI). */
 body {
   min-height: 100dvh;
+  color: #121212;
 }
 
 .page-background {

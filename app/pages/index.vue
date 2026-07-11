@@ -62,10 +62,10 @@ const alerts = [
   <div class="px-16">
     <div class="flex flex-wrap items-end justify-between gap-4">
       <div>
-        <p class="text-2xl text-neutral-800">
+        <p class="text-lg text-neutral-800">
           Bonjour {{ user?.firstName }}, on en est où ?
         </p>
-        <h1 class="text-5xl font-bold tracking-tight text-neutral-950">
+        <h1 class="text-4xl font-semibold tracking-tight text-neutral-950">
           Sprint 24, <span class="text-gradient">on est à mi-course.</span>
         </h1>
       </div>
@@ -83,7 +83,7 @@ const alerts = [
 
     <!-- Rangée des cartes de stats (le rectangle gris du fond de page passe
          derrière — voir .page-background dans main.css). -->
-    <section class="mt-10">
+    <section class="mt-4">
       <div class="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <UiStatCard
           v-for="(stat, i) in stats"
@@ -109,7 +109,10 @@ const alerts = [
       </UiCard>
 
       <div>
-        <UiCard elevation="sm" class="glass-tint-neutral rounded-[28px] p-6">
+        <UiCard
+          elevation="sm"
+          class="blurry-card shadow-card glass-tint-neutral rounded-[28px] p-6"
+        >
           <div class="flex items-center justify-between gap-3">
             <h2 class="text-xl font-bold text-neutral-900">
               Alertes automatiques
@@ -122,7 +125,7 @@ const alerts = [
             <li
               v-for="(alert, i) in alerts"
               :key="i"
-              class="glass-surface glass-surface--elevation-sm flex items-center gap-3 rounded-2xl p-3"
+              class="blurry-card shadow-card flex items-center gap-3 rounded-2xl p-3"
               :class="`glass-tint-${alert.variant}`"
             >
               <UiChip round size="sm" class="shrink-0 text-white">

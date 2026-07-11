@@ -11,12 +11,14 @@ withDefaults(
     size?: Scale;
     elevation?: Scale;
     round?: boolean;
+    disableFilter?: boolean;
   }>(),
   {
     variant: "frost",
     size: "md",
     elevation: "sm",
     round: false,
+    disableFilter: false,
   }
 );
 
@@ -52,11 +54,12 @@ const elevationClasses: Record<Scale, string> = {
 
 <template>
   <span
-    class="glass-surface inline-flex items-center justify-center gap-2 rounded-full"
+    class="chip glass-surface inline-flex items-center justify-center gap-2 rounded-full"
     :class="[
       round ? roundSizeClasses[size] : sizeClasses[size],
       variantClasses[variant],
       elevationClasses[elevation],
+      disableFilter ? 'backdrop-filter-none' : '',
     ]"
   >
     <slot />

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { IconCircle } from "@tabler/icons-vue";
 const { clear } = useUserSession();
 
 // Préfixé `_` en attendant d'être rebranché sur le futur menu utilisateur
@@ -80,23 +81,47 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header class="navbar w-full flex justify-between sticky top-0 z-30 p-4">
+  <header class="navbar w-full flex justify-between sticky top-0 z-30 p-4 pb-0">
     <div class="flex items-center gap-2">
       <!-- glass-surface (et pas glass-control) : la navbar est statique, pas
            de brightness au survol ni de scale au clic. -->
       <div
-        class="glass-surface glass-surface--elevation-md w-14 h-14 flex items-center justify-center rounded-full text-white text-4xl font-medium"
+        class="glass-surface glass-surface--elevation-md w-12 h-12 flex items-center justify-center rounded-full text-white text-4xl font-medium"
         aria-label="Oneeo"
       >
-        <span id="logo">O</span>
+        <span id="logo">
+          <!-- Défs SVG hors-écran : porte le gradient référencé par
+               `stroke="url(#logo-gradient)"` sur l'icône ci-dessous.
+               -webkit-background-clip: text ne s'applique qu'à du texte, pas
+               à un <svg> — c'est l'équivalent SVG du même effet. -->
+          <svg width="0" height="0" style="position: absolute">
+            <defs>
+              <linearGradient
+                id="logo-gradient"
+                x1="76%"
+                y1="92%"
+                x2="24%"
+                y2="8%"
+              >
+                <stop offset="0%" stop-color="#0099e5" />
+                <stop offset="100%" stop-color="#4dc3ff" />
+              </linearGradient>
+            </defs>
+          </svg>
+          <IconCircle size="28" :stroke="3" color="url(#logo-gradient)" />
+        </span>
       </div>
       <span class="font-semibold text-2xl">ONEEO</span>
     </div>
     <nav
       ref="navRef"
-      class="relative flex text-xl font-light w-fit items-center gap-6 px-6 py-3 glass-surface glass-surface--elevation-sm rounded-full"
+      class="relative flex text-xl font-light w-fit items-center gap-6 px-4 py-2 glass-surface glass-surface--elevation-sm rounded-full"
     >
-      <span aria-hidden="true" class="nav-pill glass-surface" :style="pillStyle" />
+      <span
+        aria-hidden="true"
+        class="nav-pill glass-surface"
+        :style="pillStyle"
+      />
       <NuxtLink
         v-for="(item, i) in navItems"
         :key="item.to"
@@ -117,11 +142,8 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
-#logo {
-  background: -webkit-linear-gradient(-32deg, #0099e5, #4dc3ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 3px 5px rgba(77, 195, 255, 0.2);
+#logo svg {
+  filter: drop-shadow(0 3px 5px rgba(77, 195, 255, 0.2));
 }
 
 /* Pilule de sélection (ex #join-btn) : purement décorative, elle glisse vers

@@ -6,7 +6,7 @@
     <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <LayoutNavbar />
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-4">
         <slot />
       </main>
     </div>

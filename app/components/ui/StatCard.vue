@@ -42,11 +42,18 @@ const variantClasses: Record<Variant, string> = {
   >
     <div class="flex items-start justify-between gap-3">
       <p class="text-neutral-800 font-extralight">{{ label }}</p>
-      <UiChip v-if="icon" round size="sm" class="-mr-1 -mt-1 text-white">
-        <component :is="icon" :size="18" />
+      <UiChip
+        v-if="icon"
+        round
+        size="md"
+        class="-mr-1 -mt-1 text-white"
+        :disable-filter="true"
+        :variant="variant"
+      >
+        <component :is="icon" :size="24" />
       </UiChip>
     </div>
-    <p class="mt-3 text-4xl font-bold tracking-tight text-neutral-950">
+    <p class="mt-3 text-4xl font-medium tracking-tight">
       {{ value }}
     </p>
     <p v-if="hint" class="mt-2 text-sm text-neutral-700">{{ hint }}</p>
