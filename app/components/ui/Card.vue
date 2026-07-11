@@ -19,7 +19,7 @@ const elevationClasses: Record<Elevation, string> = {
 </script>
 
 <template>
-  <div class="glass-surface rounded-3xl" :class="elevationClasses[elevation]">
+  <div class="rounded-3xl" :class="elevationClasses[elevation]">
     <!-- Pas de padding par défaut : chaque usage le fixe via l'attribut class,
          pour éviter les conflits d'utilitaires p-* entre défaut et surcharge.
          (Commentaire volontairement DANS l'élément racine : à la racine du

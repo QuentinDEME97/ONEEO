@@ -98,8 +98,10 @@ const alerts = [
     </section>
 
     <!-- Burndown + Alertes automatiques. -->
-    <section class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]">
-      <UiCard elevation="sm" class="glass-tint-neutral rounded-[28px] p-6">
+    <section
+      class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]"
+    >
+      <UiCard elevation="sm" class="blurry-card shadow-card rounded-[28px] p-6">
         <h2 class="text-xl font-bold text-neutral-900">Burndown du sprint</h2>
         <p class="text-sm text-neutral-500">Points restants - réel vs idéal</p>
         <!-- Futur graphique (ChartsBaseChart) -->

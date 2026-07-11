@@ -35,9 +35,13 @@ const variantClasses: Record<Variant, string> = {
 </script>
 
 <template>
-  <UiCard :elevation="elevation" class="p-5" :class="variantClasses[variant]">
+  <UiCard
+    :elevation="elevation"
+    class="blurry-card p-5 shadow-card"
+    :class="variantClasses[variant]"
+  >
     <div class="flex items-start justify-between gap-3">
-      <p class="text-neutral-800">{{ label }}</p>
+      <p class="text-neutral-800 font-extralight">{{ label }}</p>
       <UiChip v-if="icon" round size="sm" class="-mr-1 -mt-1 text-white">
         <component :is="icon" :size="18" />
       </UiChip>

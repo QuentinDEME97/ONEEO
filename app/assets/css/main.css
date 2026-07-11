@@ -206,32 +206,43 @@
 .glass-tint-neutral {
   background: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.72) 0%,
-    rgba(244, 247, 253, 0.4) 100%
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(242, 242, 242, 0.5) 100%
   );
+}
+
+.blurry-card {
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.shadow-card {
+  box-shadow:
+    0 8px 10px -6px rgba(0, 0, 0, 0.1),
+    0 20px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .glass-tint-blue {
   background: linear-gradient(
     135deg,
-    rgba(182, 203, 243, 0.92) 0%,
-    rgba(148, 176, 230, 0.75) 100%
+    rgba(0, 89, 178, 0.25) 0%,
+    rgba(77, 166, 255, 0.25) 100%
   );
 }
 
 .glass-tint-sand {
   background: linear-gradient(
     135deg,
-    rgba(247, 224, 183, 0.92) 0%,
-    rgba(240, 206, 152, 0.75) 100%
+    rgba(255, 136, 0, 0.25) 0%,
+    rgba(254, 186, 92, 0.25) 100%
   );
 }
 
 .glass-tint-mint {
   background: linear-gradient(
     135deg,
-    rgba(176, 227, 205, 0.92) 0%,
-    rgba(142, 209, 180, 0.75) 100%
+    rgba(0, 178, 104, 0.25) 0%,
+    rgba(77, 255, 166, 0.25) 100%
   );
 }
 
