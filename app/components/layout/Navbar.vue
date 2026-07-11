@@ -51,11 +51,13 @@ function updatePill() {
     pillStyle.value = { ...pillStyle.value, opacity: "0" };
     return;
   }
-  const navRect = nav.getBoundingClientRect();
-  const rect = el.getBoundingClientRect();
+  // offsetLeft/offsetWidth (géométrie de layout, relative à la nav) plutôt
+  // que getBoundingClientRect : les rects intègrent les transforms en cours
+  // (scale d'un ancêtre, transition…) et fausseraient la position mémorisée
+  // si la mesure tombe pendant une animation.
   pillStyle.value = {
-    left: `${rect.left - navRect.left}px`,
-    width: `${rect.width}px`,
+    left: `${el.offsetLeft}px`,
+    width: `${el.offsetWidth}px`,
     opacity: "1",
   };
 }
@@ -80,8 +82,10 @@ onBeforeUnmount(() => {
 <template>
   <header class="navbar w-full flex justify-between sticky top-0 z-30 p-4">
     <div class="flex items-center gap-2">
+      <!-- glass-surface (et pas glass-control) : la navbar est statique, pas
+           de brightness au survol ni de scale au clic. -->
       <div
-        class="glass-control glass-control--elevation-md w-14 h-14 flex items-center justify-center rounded-full text-white text-4xl font-medium"
+        class="glass-surface glass-surface--elevation-md w-14 h-14 flex items-center justify-center rounded-full text-white text-4xl font-medium"
         aria-label="Oneeo"
       >
         <span id="logo">O</span>
@@ -90,7 +94,7 @@ onBeforeUnmount(() => {
     </div>
     <nav
       ref="navRef"
-      class="relative flex text-xl font-light w-fit items-center gap-6 px-6 py-3 glass-control glass-control--elevation-sm rounded-full"
+      class="relative flex text-xl font-light w-fit items-center gap-6 px-6 py-3 glass-surface glass-surface--elevation-sm rounded-full"
     >
       <span aria-hidden="true" class="nav-pill glass-surface" :style="pillStyle" />
       <NuxtLink
