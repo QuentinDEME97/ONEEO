@@ -155,26 +155,13 @@
 }
 
 .chip  {
-  /* Chip bleu des stat cards — cible Figma : cercle en verre transparent
-     (frost, laisse voir le fond de la carte) cerné d'un anneau net, bleu vif
-     sur l'arc gauche / haut-gauche et clair ailleurs, icône blanche. La teinte
-     glass-tint-blue sert de sélecteur (pas de remplissage bleu ici) : on écrase
-     son fond pour rester transparent et on peint l'anneau via ::before. */
-  &.glass-surface.glass-tint-blue {
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.04) 0%,
-      rgba(255, 255, 255, 0.16) 100%
-    );
-
-    &::before {
-      /* Anneau : bleu vif sur l'arc gauche → clair vers la droite (110deg). */
+  &.glass-surface {
+    &.glass-tint-blue::before {
       background: linear-gradient(
-        110deg,
-        rgba(74, 150, 240, 0.95) 0%,
-        rgba(150, 195, 245, 0.85) 40%,
-        rgba(230, 242, 255, 0.8) 72%,
-        rgba(255, 255, 255, 0.75) 100%
+        180deg,
+        #e6f2ff 10%,
+        rgba(5, 130, 255, 0.2) 41%,
+        #e6f2ff 90%
       );
     }
   }
