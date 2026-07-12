@@ -16,7 +16,7 @@ withDefaults(
   {
     variant: "frost",
     size: "md",
-    elevation: "sm",
+    elevation: "md",
     round: false,
     disableFilter: false,
   }
@@ -31,7 +31,7 @@ const sizeClasses: Record<Scale, string> = {
 
 const roundSizeClasses: Record<Scale, string> = {
   sm: "h-9 w-9",
-  md: "h-11 w-11",
+  md: "h-12 w-12",
   lg: "h-14 w-14",
 };
 
