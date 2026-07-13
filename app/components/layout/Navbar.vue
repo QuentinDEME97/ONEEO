@@ -137,7 +137,30 @@ onBeforeUnmount(() => {
         {{ item.label }}
       </NuxtLink>
     </nav>
-    <div class="space-selector"></div>
+    <div class="space-selector">
+      <UiChip
+        size="sm"
+        elevation="sm"
+        class="!h-auto p-2 px-3 pr-2 gap-2 text-neutral-600"
+      >
+        Espace ONEEO
+        <UiChip
+          round
+          size="sm"
+          elevation="sm"
+          class="w-8 h-8 shrink-0 text-white"
+        >
+          <UiRoundProgress
+            :value="100"
+            :size="22"
+            :stroke-width="3.5"
+            gradient-from="#0099E5"
+            gradient-to="#4DC3FF"
+            shadow-color="rgb(77,195,255, 0.2)"
+          />
+        </UiChip>
+      </UiChip>
+    </div>
   </header>
 </template>
 

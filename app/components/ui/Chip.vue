@@ -24,9 +24,9 @@ withDefaults(
 
 // Hauteurs alignées sur Button (36/44/56px) ; en `round`, largeur = hauteur.
 const sizeClasses: Record<Scale, string> = {
-  sm: "h-9 px-4 text-sm",
-  md: "h-11 px-5 text-base",
-  lg: "h-14 px-7 text-lg",
+  sm: "px-4",
+  md: "px-5",
+  lg: "px-7",
 };
 
 const roundSizeClasses: Record<Scale, string> = {

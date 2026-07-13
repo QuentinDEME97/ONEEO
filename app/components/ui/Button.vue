@@ -20,9 +20,9 @@ const props = withDefaults(
 
 // Hauteurs alignées sur les diamètres de RoundButton (36/44/56px).
 const sizeClasses: Record<NonNullable<typeof props.size>, string> = {
-  sm: "h-9 px-4 text-sm",
-  md: "h-11 px-5 text-base",
-  lg: "h-14 px-7 text-lg",
+  sm: "h-9 px-4",
+  md: "h-11 px-5",
+  lg: "h-14 px-7",
 };
 
 // Multiplicateurs d'intensité d'ombre — voir .glass-control--elevation-* (main.css).
@@ -45,7 +45,7 @@ const rootTag = computed(() =>
     :type="rootTag === 'button' ? type : undefined"
     :disabled="rootTag === 'button' ? disabled : undefined"
     :aria-disabled="disabled || undefined"
-    class="glass-control inline-flex items-center justify-center gap-2 rounded-full text-neutral-600"
+    class="glass-control cursor-pointer inline-flex items-center justify-center gap-2 rounded-full text-neutral-600"
     :class="[sizeClasses[size], elevationClasses[elevation]]"
   >
     <slot />

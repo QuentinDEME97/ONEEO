@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import {
   IconAlertTriangle,
-  IconChartHistogram,
+  IconBatteryCharging,
+  IconBolt,
   IconClockExclamation,
   IconLock,
   IconSparkles,
+  IconTargetArrow,
+  IconTrendingUp,
 } from "@tabler/icons-vue";
 
 const { user } = useUserSession();
@@ -15,24 +18,28 @@ const stats = [
     value: "62%",
     hint: "-12 pts vs objectif",
     variant: "blue",
+    icon: IconTrendingUp,
   },
   {
     label: "Objectif à date",
     value: "74%",
     hint: "Rythme attendu",
     variant: "blue",
+    icon: IconTargetArrow,
   },
   {
     label: "Capacité restante",
     value: "148 h",
     hint: "-17 h - Congés déduits",
     variant: "sand",
+    icon: IconBatteryCharging,
   },
   {
-    label: "Capacité restante",
-    value: "148 h",
-    hint: "-17 h - Congés déduits",
+    label: "Vélocité",
+    value: "38 pts",
+    hint: "moy 44 - 3 derniers sprints",
     variant: "mint",
+    icon: IconBolt,
   },
 ] as const;
 
@@ -69,12 +76,31 @@ const alerts = [
           Sprint 24, <span class="text-gradient">on est à mi-course.</span>
         </h1>
       </div>
-      <div class="flex shrink-0 items-center gap-3 pb-1">
-        <UiChip size="sm" class="gap-2 text-neutral-600">
-          <span class="h-2.5 w-2.5 rounded-full bg-emerald-400" />
+      <div class="flex shrink-0 items-stretch gap-3 pb-1">
+        <UiChip
+          size="sm"
+          elevation="sm"
+          class="!h-auto p-2 pr-3 pl-2 gap-2 text-neutral-600"
+        >
+          <UiChip
+            round
+            size="sm"
+            elevation="sm"
+            class="w-8 h-8 shrink-0 text-white"
+          >
+            <UiRoundProgress
+              :value="100"
+              :size="22"
+              :stroke-width="3.5"
+              gradient-from="#00B268"
+              gradient-to="#4DFFA6"
+              shadow-color="rgba(0, 178, 104, 0.32)"
+            />
+          </UiChip>
+
           JIRA sync. il y a 6 min
         </UiChip>
-        <UiButton size="sm" elevation="sm" class="filled">
+        <UiButton size="sm" elevation="sm" class="!h-auto filled">
           <IconSparkles :size="16" />
           Compte rendu IA
         </UiButton>
@@ -92,7 +118,7 @@ const alerts = [
           :value="stat.value"
           :hint="stat.hint"
           :variant="stat.variant"
-          :icon="IconChartHistogram"
+          :icon="stat.icon"
         />
       </div>
     </section>
@@ -102,7 +128,7 @@ const alerts = [
       class="mt-8 grid grid-cols-1 items-start gap-6 lg:grid-cols-[3fr_2fr]"
     >
       <UiCard elevation="sm" class="blurry-card shadow-card rounded-[28px] p-6">
-        <h2 class="text-xl font-bold text-neutral-900">Burndown du sprint</h2>
+        <h2 class="text-xl font-medium text-neutral-900">Burndown du sprint</h2>
         <p class="text-sm text-neutral-500">Points restants - réel vs idéal</p>
         <!-- Futur graphique (ChartsBaseChart) -->
         <div class="h-72" />
@@ -114,22 +140,31 @@ const alerts = [
           class="blurry-card shadow-card glass-tint-neutral rounded-[28px] p-6"
         >
           <div class="flex items-center justify-between gap-3">
-            <h2 class="text-xl font-bold text-neutral-900">
+            <h2 class="text-xl font-medium text-neutral-900">
               Alertes automatiques
             </h2>
-            <UiChip variant="pink" size="sm" class="text-rose-900/80">
+            <UiChip
+              variant="pink"
+              size="md"
+              class="px-3! py-1 glass-tint-pink force-bg"
+            >
               5 actives
             </UiChip>
           </div>
-          <ul class="mt-5 flex flex-col gap-3">
+          <ul class="mt-5 flex flex-col gap-2">
             <li
               v-for="(alert, i) in alerts"
               :key="i"
-              class="blurry-card shadow-card flex items-center gap-3 rounded-2xl p-3"
+              class="blurry-card shadow-card flex items-center gap-3 rounded-3xl p-3"
               :class="`glass-tint-${alert.variant}`"
             >
-              <UiChip round size="sm" class="shrink-0 text-white">
-                <component :is="alert.icon" :size="18" />
+              <UiChip
+                round
+                size="md"
+                class="glass-surface shrink-0 text-white"
+                :class="`glass-tint-${alert.variant}`"
+              >
+                <component :is="alert.icon" :size="24" />
               </UiChip>
               <div class="min-w-0">
                 <p class="truncate font-semibold text-neutral-900">
