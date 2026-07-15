@@ -75,8 +75,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 /* Fond plus opaque que la recette de base : un menu doit rester lisible
-   quel que soit le contenu qui passe dessous. */
+   quel que soit le contenu qui passe dessous.
+   position: absolute redéclaré ici car .glass-surface (CSS non-layered de
+   main.css) pose `position: relative` et bat l'utilitaire Tailwind `absolute`
+   (layered) — sans ça le panneau reste dans le flux et décale la page. */
 .dropdown-panel {
+  position: absolute;
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.55) 0%,

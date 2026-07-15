@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { Copy01Icon, Tick02Icon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/vue";
-import { IconUserPlus } from "@tabler/icons-vue";
+import { IconCheck, IconCopy, IconUserPlus } from "@tabler/icons-vue";
 
 interface Member {
   id: string;
@@ -35,7 +33,7 @@ const { data, refresh } = useAsyncData<MembersResponse>(
 
 const members = computed(() => data.value?.members ?? []);
 
-const dialogRef = ref<HTMLDialogElement>();
+const modalRef = ref<{ showModal: () => void; close: () => void }>();
 const form = reactive({ firstName: "", lastName: "", email: "" });
 const errorMessage = ref("");
 const submitting = ref(false);
@@ -51,11 +49,11 @@ function openCreateDialog() {
   errorMessage.value = "";
   createdResult.value = null;
   copied.value = false;
-  dialogRef.value?.showModal();
+  modalRef.value?.showModal();
 }
 
 function closeDialog() {
-  dialogRef.value?.close();
+  modalRef.value?.close();
   if (createdResult.value) refresh();
 }
 
@@ -177,100 +175,72 @@ function memberInitials(m: Member) {
       </table>
     </UiCard>
 
-    <Teleport to="body">
-      <dialog ref="dialogRef" class="modal">
-        <div class="modal-box">
-          <template v-if="!createdResult">
-            <h3 class="text-lg font-bold">Ajouter un utilisateur</h3>
-            <form class="flex flex-col gap-3 mt-4" @submit.prevent="submit">
-              <label class="form-control">
-                <span class="label-text mb-1">Prénom</span>
-                <input
-                  v-model="form.firstName"
-                  type="text"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
-              <label class="form-control">
-                <span class="label-text mb-1">Nom</span>
-                <input
-                  v-model="form.lastName"
-                  type="text"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
-              <label class="form-control">
-                <span class="label-text mb-1">Email</span>
-                <input
-                  v-model="form.email"
-                  type="email"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
+    <UiModal
+      ref="modalRef"
+      :title="createdResult ? 'Utilisateur créé' : 'Ajouter un utilisateur'"
+    >
+      <template v-if="!createdResult">
+        <form class="flex flex-col gap-4" @submit.prevent="submit">
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Prénom</span>
+            <UiInput v-model="form.firstName" required />
+          </label>
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Nom</span>
+            <UiInput v-model="form.lastName" required />
+          </label>
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Email</span>
+            <UiInput v-model="form.email" type="email" required />
+          </label>
 
-              <p v-if="errorMessage" class="text-error text-sm">
-                {{ errorMessage }}
-              </p>
+          <p v-if="errorMessage" class="text-sm text-rose-600">
+            {{ errorMessage }}
+          </p>
 
-              <div class="modal-action">
-                <button
-                  type="button"
-                  class="btn btn-ghost"
-                  @click="dialogRef?.close()"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  :disabled="submitting"
-                >
-                  {{ submitting ? "Création..." : "Créer" }}
-                </button>
-              </div>
-            </form>
-          </template>
-
-          <template v-else>
-            <h3 class="text-lg font-bold">Utilisateur créé</h3>
-            <p class="text-sm text-base-content/70 mt-2">
-              Communiquez ce mot de passe temporaire à
-              <strong>{{ createdResult.email }}</strong> — il devra le changer à
-              sa première connexion.
-            </p>
-            <div class="flex items-center gap-2 mt-4">
-              <code class="bg-base-200 rounded px-3 py-2 flex-1 text-sm">
-                {{ createdResult.temporaryPassword }}
-              </code>
-              <button
-                type="button"
-                class="btn btn-square btn-ghost"
-                @click="copyPassword"
-              >
-                <HugeiconsIcon
-                  :icon="copied ? Tick02Icon : Copy01Icon"
-                  :size="18"
-                />
-              </button>
-            </div>
-            <div class="modal-action">
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="closeDialog"
-              >
-                Terminé
-              </button>
-            </div>
-          </template>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
+          <div class="mt-2 flex justify-end gap-3">
+            <UiButton size="sm" elevation="sm" @click="modalRef?.close()">
+              Annuler
+            </UiButton>
+            <UiButton
+              type="submit"
+              size="sm"
+              elevation="sm"
+              class="filled"
+              :disabled="submitting"
+            >
+              {{ submitting ? "Création..." : "Créer" }}
+            </UiButton>
+          </div>
         </form>
-      </dialog>
-    </Teleport>
+      </template>
+
+      <template v-else>
+        <p class="text-sm text-neutral-600">
+          Communiquez ce mot de passe temporaire à
+          <strong>{{ createdResult.email }}</strong> — il devra le changer à sa
+          première connexion.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <code
+            class="glass-surface glass-surface--elevation-sm flex-1 rounded-xl px-3 py-2 text-sm text-neutral-700"
+          >
+            {{ createdResult.temporaryPassword }}
+          </code>
+          <UiRoundButton
+            :icon="copied ? IconCheck : IconCopy"
+            aria-label="Copier le mot de passe"
+            size="sm"
+            elevation="sm"
+            @click="copyPassword"
+          />
+        </div>
+        <div class="mt-6 flex justify-end">
+          <UiButton size="sm" elevation="sm" class="filled" @click="closeDialog">
+            Terminé
+          </UiButton>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>

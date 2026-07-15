@@ -10,6 +10,9 @@ withDefaults(
     size?: Scale;
     elevation?: Scale;
     disabled?: boolean;
+    /* Relayé explicitement : les attrs fallthrough atterrissent sur le
+       wrapper, pas sur le <input> interne. */
+    required?: boolean;
   }>(),
   {
     type: "text",
@@ -17,6 +20,7 @@ withDefaults(
     size: "md",
     elevation: "sm",
     disabled: false,
+    required: false,
   }
 );
 
@@ -54,6 +58,7 @@ const elevationClasses: Record<Scale, string> = {
       :type="type"
       :placeholder="placeholder"
       :disabled="disabled"
+      :required="required"
       class="w-full min-w-0 bg-transparent text-neutral-600 placeholder:text-neutral-400 outline-none"
     />
     <slot name="suffix" />

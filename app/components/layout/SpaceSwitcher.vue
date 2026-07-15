@@ -3,7 +3,7 @@ import { IconCheck, IconChevronDown, IconPlus } from "@tabler/icons-vue";
 
 const { spaces, currentSpace, selectSpace, createSpace } = useCurrentSpace();
 
-const dialogRef = ref<HTMLDialogElement>();
+const modalRef = ref<{ showModal: () => void; close: () => void }>();
 const newSpaceName = ref("");
 const creating = ref(false);
 
@@ -15,7 +15,7 @@ function pickSpace(id: string, close: () => void) {
 function openCreateDialog(close: () => void) {
   close();
   newSpaceName.value = "";
-  dialogRef.value?.showModal();
+  modalRef.value?.showModal();
 }
 
 async function submitCreateSpace() {
@@ -24,7 +24,7 @@ async function submitCreateSpace() {
   creating.value = true;
   try {
     await createSpace(newSpaceName.value.trim());
-    dialogRef.value?.close();
+    modalRef.value?.close();
   } finally {
     creating.value = false;
   }
@@ -108,41 +108,27 @@ async function submitCreateSpace() {
     </template>
   </UiDropdown>
 
-  <Teleport to="body">
-    <dialog ref="dialogRef" class="modal">
-      <div class="modal-box">
-        <h3 class="text-lg font-bold">Créer un espace</h3>
-        <form
-          class="flex flex-col gap-3 mt-4"
-          @submit.prevent="submitCreateSpace"
+  <UiModal ref="modalRef" title="Créer un espace">
+    <form class="flex flex-col gap-4" @submit.prevent="submitCreateSpace">
+      <label class="flex flex-col gap-1.5">
+        <span class="text-sm text-neutral-500">Nom de l'espace</span>
+        <UiInput v-model="newSpaceName" required placeholder="Ex. Espace Client" />
+      </label>
+      <div class="mt-2 flex justify-end gap-3">
+        <UiButton size="sm" elevation="sm" @click="modalRef?.close()">
+          Annuler
+        </UiButton>
+        <UiButton
+          type="submit"
+          size="sm"
+          elevation="sm"
+          class="filled"
+          :disabled="creating"
         >
-          <label class="form-control">
-            <span class="label-text mb-1">Nom de l'espace</span>
-            <input
-              v-model="newSpaceName"
-              type="text"
-              required
-              class="input input-bordered w-full"
-            />
-          </label>
-          <div class="modal-action">
-            <button
-              type="button"
-              class="btn btn-ghost"
-              @click="dialogRef?.close()"
-            >
-              Annuler
-            </button>
-            <button type="submit" class="btn btn-primary" :disabled="creating">
-              <IconPlus :size="16" />
-              Créer
-            </button>
-          </div>
-        </form>
+          <IconPlus :size="16" />
+          Créer
+        </UiButton>
       </div>
-      <form method="dialog" class="modal-backdrop">
-        <button>close</button>
-      </form>
-    </dialog>
-  </Teleport>
+    </form>
+  </UiModal>
 </template>
