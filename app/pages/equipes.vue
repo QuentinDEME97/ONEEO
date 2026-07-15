@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  Copy01Icon,
-  Tick02Icon,
-  UserAdd01Icon,
-} from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/vue";
+import { IconCheck, IconCopy, IconUserPlus } from "@tabler/icons-vue";
 
 interface Member {
   id: string;
@@ -38,7 +33,7 @@ const { data, refresh } = useAsyncData<MembersResponse>(
 
 const members = computed(() => data.value?.members ?? []);
 
-const dialogRef = ref<HTMLDialogElement>();
+const modalRef = ref<{ showModal: () => void; close: () => void }>();
 const form = reactive({ firstName: "", lastName: "", email: "" });
 const errorMessage = ref("");
 const submitting = ref(false);
@@ -54,11 +49,11 @@ function openCreateDialog() {
   errorMessage.value = "";
   createdResult.value = null;
   copied.value = false;
-  dialogRef.value?.showModal();
+  modalRef.value?.showModal();
 }
 
 function closeDialog() {
-  dialogRef.value?.close();
+  modalRef.value?.close();
   if (createdResult.value) refresh();
 }
 
@@ -94,154 +89,158 @@ async function copyPassword() {
   await navigator.clipboard.writeText(createdResult.value.temporaryPassword);
   copied.value = true;
 }
+
+function memberInitials(m: Member) {
+  return `${m.firstName[0] ?? ""}${m.lastName[0] ?? ""}`.toUpperCase();
+}
 </script>
 
 <template>
-  <div>
-    <div class="flex items-center justify-between mb-4">
-      <h1 class="text-2xl font-bold">Équipe</h1>
-      <button class="btn btn-primary" @click="openCreateDialog">
-        <HugeiconsIcon :icon="UserAdd01Icon" :size="18" />
+  <div class="px-16">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-4xl font-semibold tracking-tight text-neutral-950">
+        Équipe
+      </h1>
+      <UiButton size="sm" elevation="sm" class="filled" @click="openCreateDialog">
+        <IconUserPlus :size="16" />
         Ajouter un utilisateur
-      </button>
+      </UiButton>
     </div>
 
-    <div class="overflow-x-auto bg-base-100 rounded-box border border-base-300">
-      <table class="table">
+    <UiCard
+      elevation="sm"
+      class="blurry-card shadow-card overflow-x-auto rounded-[28px] p-3"
+    >
+      <table class="w-full border-collapse text-left">
         <thead>
           <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Statut</th>
+            <th
+              v-for="head in ['Nom', 'Email', 'Rôle', 'Statut']"
+              :key="head"
+              class="px-4 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-neutral-400"
+            >
+              {{ head }}
+            </th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="m in members" :key="m.id">
-            <td>{{ m.firstName }} {{ m.lastName }}</td>
-            <td>{{ m.email }}</td>
-            <td>
-              <span
-                class="badge"
-                :class="
-                  m.roleName === 'Owner' ? 'badge-primary' : 'badge-ghost'
-                "
+          <tr
+            v-for="m in members"
+            :key="m.id"
+            class="transition-colors hover:bg-white/30"
+          >
+            <td class="border-t border-white/50 px-4 py-3">
+              <div class="flex items-center gap-3">
+                <UiChip
+                  round
+                  size="sm"
+                  class="shrink-0 text-xs font-semibold text-neutral-700"
+                >
+                  {{ memberInitials(m) }}
+                </UiChip>
+                <span class="font-medium text-neutral-900">
+                  {{ m.firstName }} {{ m.lastName }}
+                </span>
+              </div>
+            </td>
+            <td class="border-t border-white/50 px-4 py-3 text-neutral-600">
+              {{ m.email }}
+            </td>
+            <td class="border-t border-white/50 px-4 py-3">
+              <UiChip
+                size="sm"
+                :variant="m.roleName === 'Owner' ? 'blue' : 'frost'"
+                class="h-7! px-3! text-xs text-neutral-700"
               >
                 {{ m.roleName }}
-              </span>
+              </UiChip>
             </td>
-            <td>
-              <span
+            <td class="border-t border-white/50 px-4 py-3">
+              <UiChip
                 v-if="m.mustChangePassword"
-                class="badge badge-warning badge-outline"
+                size="sm"
+                variant="sand"
+                class="h-7! px-3! text-xs text-amber-900/70"
               >
                 Mot de passe à changer
-              </span>
+              </UiChip>
             </td>
           </tr>
           <tr v-if="members.length === 0">
-            <td colspan="4" class="text-center text-base-content/60">
+            <td colspan="4" class="px-4 py-8 text-center text-neutral-400">
               Aucun membre.
             </td>
           </tr>
         </tbody>
       </table>
-    </div>
+    </UiCard>
 
-    <Teleport to="body">
-      <dialog ref="dialogRef" class="modal">
-        <div class="modal-box">
-          <template v-if="!createdResult">
-            <h3 class="text-lg font-bold">Ajouter un utilisateur</h3>
-            <form class="flex flex-col gap-3 mt-4" @submit.prevent="submit">
-              <label class="form-control">
-                <span class="label-text mb-1">Prénom</span>
-                <input
-                  v-model="form.firstName"
-                  type="text"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
-              <label class="form-control">
-                <span class="label-text mb-1">Nom</span>
-                <input
-                  v-model="form.lastName"
-                  type="text"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
-              <label class="form-control">
-                <span class="label-text mb-1">Email</span>
-                <input
-                  v-model="form.email"
-                  type="email"
-                  required
-                  class="input input-bordered w-full"
-                />
-              </label>
+    <UiModal
+      ref="modalRef"
+      :title="createdResult ? 'Utilisateur créé' : 'Ajouter un utilisateur'"
+    >
+      <template v-if="!createdResult">
+        <form class="flex flex-col gap-4" @submit.prevent="submit">
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Prénom</span>
+            <UiInput v-model="form.firstName" required />
+          </label>
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Nom</span>
+            <UiInput v-model="form.lastName" required />
+          </label>
+          <label class="flex flex-col gap-1.5">
+            <span class="text-sm text-neutral-500">Email</span>
+            <UiInput v-model="form.email" type="email" required />
+          </label>
 
-              <p v-if="errorMessage" class="text-error text-sm">
-                {{ errorMessage }}
-              </p>
+          <p v-if="errorMessage" class="text-sm text-rose-600">
+            {{ errorMessage }}
+          </p>
 
-              <div class="modal-action">
-                <button
-                  type="button"
-                  class="btn btn-ghost"
-                  @click="dialogRef?.close()"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  class="btn btn-primary"
-                  :disabled="submitting"
-                >
-                  {{ submitting ? "Création..." : "Créer" }}
-                </button>
-              </div>
-            </form>
-          </template>
-
-          <template v-else>
-            <h3 class="text-lg font-bold">Utilisateur créé</h3>
-            <p class="text-sm text-base-content/70 mt-2">
-              Communiquez ce mot de passe temporaire à
-              <strong>{{ createdResult.email }}</strong> — il devra le changer à
-              sa première connexion.
-            </p>
-            <div class="flex items-center gap-2 mt-4">
-              <code class="bg-base-200 rounded px-3 py-2 flex-1 text-sm">
-                {{ createdResult.temporaryPassword }}
-              </code>
-              <button
-                type="button"
-                class="btn btn-square btn-ghost"
-                @click="copyPassword"
-              >
-                <HugeiconsIcon
-                  :icon="copied ? Tick02Icon : Copy01Icon"
-                  :size="18"
-                />
-              </button>
-            </div>
-            <div class="modal-action">
-              <button
-                type="button"
-                class="btn btn-primary"
-                @click="closeDialog"
-              >
-                Terminé
-              </button>
-            </div>
-          </template>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
+          <div class="mt-2 flex justify-end gap-3">
+            <UiButton size="sm" elevation="sm" @click="modalRef?.close()">
+              Annuler
+            </UiButton>
+            <UiButton
+              type="submit"
+              size="sm"
+              elevation="sm"
+              class="filled"
+              :disabled="submitting"
+            >
+              {{ submitting ? "Création..." : "Créer" }}
+            </UiButton>
+          </div>
         </form>
-      </dialog>
-    </Teleport>
+      </template>
+
+      <template v-else>
+        <p class="text-sm text-neutral-600">
+          Communiquez ce mot de passe temporaire à
+          <strong>{{ createdResult.email }}</strong> — il devra le changer à sa
+          première connexion.
+        </p>
+        <div class="mt-4 flex items-center gap-2">
+          <code
+            class="glass-surface glass-surface--elevation-sm flex-1 rounded-xl px-3 py-2 text-sm text-neutral-700"
+          >
+            {{ createdResult.temporaryPassword }}
+          </code>
+          <UiRoundButton
+            :icon="copied ? IconCheck : IconCopy"
+            aria-label="Copier le mot de passe"
+            size="sm"
+            elevation="sm"
+            @click="copyPassword"
+          />
+        </div>
+        <div class="mt-6 flex justify-end">
+          <UiButton size="sm" elevation="sm" class="filled" @click="closeDialog">
+            Terminé
+          </UiButton>
+        </div>
+      </template>
+    </UiModal>
   </div>
 </template>

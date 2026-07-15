@@ -3,6 +3,11 @@
   themes: all;
 }
 
+@theme {
+  --font-sans: "Urbanist", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
 @plugin "daisyui/theme" {
   name: "oneeo";
   default: false;
@@ -36,4 +41,359 @@
   --border: 1px;
   --depth: 1;
   --noise: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Design system glassmorphisme — recette partagée des surfaces verre,
+   consommée par app/components/ui/.
+   Deux classes pour un même rendu :
+   - .glass-surface : la recette seule, pour les éléments statiques ou champs
+     (Card, Input) — pas de réaction au survol ni d'enfoncement au clic.
+   - .glass-control : la recette + les états d'interaction (hover, active),
+     pour les éléments cliquables (Button, RoundButton).
+   Spec Figma : fond FFFFFF 5% + gradient 135deg (haut-gauche → bas-droite,
+   transparent jusqu'à 50%, blanc opaque à 90%), bordure en gradient 0.75px,
+   blur d'arrière-plan uniforme 12, ombre portée légère pour la hauteur.
+
+   Un levier exposé via custom property, pilotable depuis les composants
+   (prop `elevation`) sans dupliquer la recette :
+   - --glass-elevation : multiplicateur (1 = spec Figma) appliqué à l'alpha du
+     box-shadow et de l'ombre traversante, pour ajuster l'intensité perçue selon
+     le fond sur lequel le contrôle est posé (ex. page unie vs photo).
+--------------------------------------------------------------------------- */
+.glass-surface,
+.glass-control {
+  --glass-elevation: 1;
+
+  position: relative;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  box-shadow:
+    0 0 10px 0 rgba(0, 0, 0, 0),
+    0 4px 12px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 32px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 24px 24px 0 rgba(0, 0, 0, calc(0.03 * var(--glass-elevation))),
+    0 9px 24px 0 rgba(0, 0, 0, calc(0.05 * var(--glass-elevation)));
+  transition:
+    transform 150ms,
+    filter 150ms,
+    box-shadow 150ms;
+
+  &.filled {
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0) 50%,
+      rgba(255, 255, 255, 0.75) 90%
+    );
+  }
+
+  &.backdrop-filter-none {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* #sidebar {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.75) 90%
+  );
+} */
+
+/* Bordure en dégradé (weight Figma 0.75) : blanc opaque aux coins haut-gauche
+   et bas-droite, invisible entre les deux. Un vrai `border` ne peut pas porter
+   de gradient en suivant un border-radius, d'où le pseudo-élément masqué.
+   Un seul pseudo suffit : l'intérieur reste transparent (frost + blur), seul
+   l'anneau de 1px est peint. */
+.glass-surface::before,
+.glass-control::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.25px;
+  background: linear-gradient(
+    180deg,
+    rgba(242, 242, 242, 0.9) 10%,
+    rgba(129, 129, 129, 0.25) 38%,
+    rgba(129, 129, 129, 0.25) 41%,
+    rgba(129, 129, 129, 0.25) 75%,
+    rgba(255, 255, 255, 0.9) 90%
+  );
+  /* Couche 1 clippée sur content-box (l'intérieur du padding), couche 2 pleine :
+     l'exclusion ne laisse visible que l'anneau de padding qui porte le gradient. */
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Ombre « traversante » : forme sombre floue à la forme du bouton, décalée vers le
+   bas. En z-index -1, elle se peint au-dessus du fond verre mais SOUS le contenu :
+   l'intérieur translucide est donc assombri (ombre vue à travers), et le débord en
+   bas se lit comme une ombre portée. Un box-shadow externe ne peut pas faire ça —
+   il est découpé hors de la border-box et n'est jamais peint sous l'élément.
+   Le backdrop-filter du parent ne floute pas ce pseudo (il fait partie du rendu de
+   l'élément, pas du backdrop), d'où le filter: blur() porté ici directement. */
+.glass-surface::after,
+.glass-control::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  /* background: rgba(0, 0, 0, calc(0.05 * var(--glass-elevation))); */
+  filter: blur(6px);
+  transform: translateY(5px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.chip  {
+  &.glass-surface {
+    &:not(.force-bg) {
+      background: transparent;
+    }
+    &.glass-tint-blue::before {
+      background: linear-gradient(
+        180deg,
+        #ddeefe 0%,
+        rgba(142, 196, 255, 0.25) 20%,
+        rgba(142, 196, 255, 0.25) 80%,
+        #ddeefe 100%
+      );
+    }
+    &.glass-tint-sand::before {
+      background: linear-gradient(
+        180deg,
+        #f2f2f2 0%,
+        rgba(254, 186, 92, 0.25) 20%,
+        rgba(254, 186, 92, 0.25) 80%,
+        #ffffff 100%
+      );
+    }
+    &.glass-tint-pink::before {
+      background: linear-gradient(
+        180deg,
+        #f2f2f2 0%,
+        rgba(254, 92, 95, 0.25) 20%,
+        rgba(254, 92, 95, 0.25) 80%,
+        #ffffff 100%
+      );
+    }
+    &.glass-tint-mint::before {
+      background: linear-gradient(
+        180deg,
+        #f2f2f2 0%,
+        rgba(77, 255, 166, 0.25) 20%,
+        rgba(77, 255, 166, 0.25) 80%,
+        #ffffff 100%
+      );
+    }
+  }
+}
+
+/* Niveaux d'élévation — multiplient l'intensité des ombres (box-shadow +
+   ombre traversante) sans toucher au reste de la recette. 1 = spec Figma.
+   (Les deux noms sont équivalents ; --surface pour les éléments statiques.) */
+.glass-surface--elevation-sm,
+.glass-control--elevation-sm {
+  --glass-elevation: 0.4;
+}
+
+.glass-surface--elevation-md,
+.glass-control--elevation-md {
+  --glass-elevation: 1;
+}
+
+.glass-surface--elevation-lg,
+.glass-control--elevation-lg {
+  --glass-elevation: 1.6;
+}
+
+/* États d'interaction — non spécifiés dans la maquette, volontairement discrets. */
+.glass-control:hover {
+  filter: brightness(1.15);
+  /* transform: scale(1.05); */
+}
+
+.glass-control:active {
+  transform: scale(0.85);
+  /* Ombre contractée dans les mêmes proportions que le scale(0.85), pour que
+     l'enfoncement au clic reste cohérent avec la hauteur perçue du bouton. */
+  box-shadow:
+    0 0 10px 0 rgba(0, 0, 0, 0),
+    0 4px 12px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 32px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 24px 24px 0 rgba(0, 0, 0, calc(0.01 * var(--glass-elevation))),
+    0 9px 24px 0 rgba(0, 0, 0, 0);
+}
+
+.glass-surface:focus-visible,
+.glass-control:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 2px;
+}
+
+.glass-surface:disabled,
+.glass-surface[aria-disabled="true"],
+.glass-control:disabled,
+.glass-control[aria-disabled="true"] {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Teintes des surfaces verre — gradient du coin supérieur gauche au coin
+   inférieur droit (135deg), posé sur une surface transparente + blur.
+   Valeurs approximatives calées sur la maquette : à affiner. Consommées par
+   les variantes de StatCard et Chip, et utilisables sur Card directement. */
+.glass-tint-neutral {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5) 0%,
+    rgba(242, 242, 242, 0.5) 100%
+  );
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(242, 242, 242, 0.1),
+      0 20px 25px -5px rgba(242, 242, 242, 0.1);
+  }
+}
+
+.blurry-card {
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    0 8px 10px -6px rgba(242, 242, 242, 0.5),
+    0 20px 25px -5px rgba(242, 242, 242, 0.5);
+}
+
+.shadow-card {
+  box-shadow:
+    0 8px 10px -6px rgba(100, 100, 100, 0.1),
+    0 20px 25px -5px rgba(100, 100, 100, 0.1);
+}
+
+.glass-tint-blue {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 89, 178, 0.25) 0%,
+    rgba(77, 166, 255, 0.25) 100%
+  );
+
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(77, 166, 255, 0.1),
+      0 20px 25px -5px rgba(77, 166, 255, 0.1);
+  }
+}
+
+.glass-tint-sand {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 136, 0, 0.25) 0%,
+    rgba(254, 186, 92, 0.25) 100%
+  );
+
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(254, 186, 92, 0.1),
+      0 20px 25px -5px rgba(254, 186, 92, 0.1);
+  }
+}
+
+.glass-tint-mint {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 178, 104, 0.25) 0%,
+    rgba(77, 255, 166, 0.25) 100%
+  );
+  &.shadow-card {
+    box-shadow:
+      0 8px 10px -6px rgba(77, 255, 166, 0.1),
+      0 20px 25px -5px rgba(77, 255, 166, 0.1);
+  }
+}
+
+.glass-tint-pink {
+  background: linear-gradient(
+    135deg,
+    rgba(254, 92, 95, 0.25) 0%,
+    rgba(255, 0, 64, 0.25) 100%
+  );
+}
+
+/* Fond de page — le verre a besoin d'un fond non uniforme pour exister
+   (blur + translucidité invisibles sur du blanc pur). Teintes calées sur la
+   maquette Dashboard (lavande / bleu très clairs).
+
+   Le fond vit dans une couche fixe dédiée (.page-background, posée dans le
+   layout) plutôt que sur body : en z-index -1 elle passe sous le contenu de
+   toutes les pages, et porte aussi les formes décoratives (rectangle gris,
+   rayures bleues) qui font office d'image de fond. body doit rester
+   transparent — un fond opaque sur body peindrait par-dessus la couche -1
+   (car :root porte déjà le fond DaisyUI). */
+body {
+  min-height: 100dvh;
+  color: #121212;
+}
+
+.page-background {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      1200px 650px at 100% 100%,
+      rgb(192, 27, 52, 0.2) 16%,
+      rgb(195, 207, 244, 0.2) 43%,
+      rgb(195, 207, 244, 0) 100%
+    ),
+    radial-gradient(
+      1600px 650px at 5% -5%,
+      rgb(27, 123, 192, 0.15) 22%,
+      rgb(27, 123, 192, 0.12) 45%,
+      rgb(251, 233, 241, 0.2) 68%,
+      rgb(195, 207, 244, 0.2) 100%
+    ),
+    linear-gradient(160deg, #ffffff 0%, #ffffff 100%);
+}
+
+/* Formes décoratives du fond — positions relatives au viewport. */
+.page-background::before {
+  /* Rectangle gris, côté gauche. */
+  content: "";
+  position: absolute;
+  left: 4%;
+  top: 21%;
+  width: 42%;
+  height: 55%;
+  border-radius: 28px;
+  background: linear-gradient(
+    -32deg,
+    rgb(173, 173, 173, 0.08),
+    rgba(128, 128, 128, 0.08)
+  );
+}
+
+.page-background::after {
+  /* Rectangle à rayures bleues, côté droit. */
+  content: "";
+  position: absolute;
+  right: 2%;
+  top: 22%;
+  width: 30%;
+  height: 74%;
+  border-radius: 28px;
+  background: repeating-linear-gradient(
+    -135deg,
+    rgba(78, 166, 255, 1) 0 2px,
+    transparent 2px 8px
+  );
 }

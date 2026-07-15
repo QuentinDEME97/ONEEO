@@ -3,8 +3,14 @@ import tailwindcss from "@tailwindcss/vite";
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  modules: ["@nuxt/eslint", "nuxt-auth-utils"],
+  modules: ["@nuxt/eslint", "nuxt-auth-utils", "@nuxt/fonts"],
   devtools: { enabled: true },
+  fonts: {
+    families: [
+      { name: "Urbanist", provider: "google", weights: ["100 900"] },
+      { name: "Inter", provider: "google", weights: ["100 900"] },
+    ],
+  },
   typescript: {
     strict: true,
   },
