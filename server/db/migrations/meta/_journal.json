@@ -8,6 +8,13 @@
       "when": 1783430502673,
       "tag": "0000_identity_rbac",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784548567793,
+      "tag": "0001_project",
+      "breakpoints": true
     }
   ]
 }
