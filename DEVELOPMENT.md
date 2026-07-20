@@ -214,10 +214,11 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.8 — Schéma : projet
 
-- [ ] **Objectif** : table projet rattachée à l'espace.
+- [x] **Objectif** : table projet rattachée à l'espace.
 - **Fichiers** : `server/db/schema/project.ts`.
 - **DoD** :
-  - [ ] Table `project` (`space_id`, `name`, `theme`, `deliverable_label`), migration OK.
+  - [x] Table `project` (`space_id`, `name`, `theme`, `deliverable_label`), migration OK.
+- **Note** : `theme` est nullable — `null` signifie « hérite du thème de l'espace », la surcharge effective arrivant en 1.9. `deliverable_label` a `"Livrable"` pour défaut. Les helpers `id()`/`timestamps` d'`identity.ts` sont extraits dans `server/db/schema/helpers.ts`, partagés par les prochains fichiers de schéma.
 - **Taille** : S · ⚠️ dép. 1.1.
 
 ### 1.9 — Projets : CRUD + sélecteur + thème

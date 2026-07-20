@@ -1,5 +1,3 @@
-import { randomUUID } from "node:crypto";
-import { sql } from "drizzle-orm";
 import {
   integer,
   primaryKey,
@@ -7,21 +5,7 @@ import {
   text,
   unique,
 } from "drizzle-orm/sqlite-core";
-
-const id = () =>
-  text("id")
-    .primaryKey()
-    .$defaultFn(() => randomUUID());
-
-const timestamps = {
-  createdAt: text("created_at")
-    .notNull()
-    .default(sql`(current_timestamp)`),
-  updatedAt: text("updated_at")
-    .notNull()
-    .default(sql`(current_timestamp)`)
-    .$onUpdate(() => sql`(current_timestamp)`),
-};
+import { id, timestamps } from "./helpers";
 
 export const user = sqliteTable("user", {
   id: id(),
