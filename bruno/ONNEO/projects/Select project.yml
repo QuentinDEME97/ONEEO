@@ -1,0 +1,21 @@
+info:
+  name: Select project
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:3000/api/projects/04e64f86-354f-4983-80fd-e8b31f258a3b/select
+  body:
+    type: json
+    data: |-
+      {
+        "name": "RENOV"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
