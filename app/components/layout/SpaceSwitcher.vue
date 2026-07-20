@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconCheck, IconChevronDown, IconPlus } from "@tabler/icons-vue";
+import { IconCheck, IconPlus } from "@tabler/icons-vue";
 
 const { spaces, currentSpace, selectSpace, createSpace } = useCurrentSpace();
 
@@ -41,11 +41,6 @@ async function submitCreateSpace() {
         class="!h-auto p-2 px-3 pr-2 gap-2 text-neutral-600"
       >
         {{ currentSpace?.name ?? "Espace" }}
-        <IconChevronDown
-          :size="16"
-          class="shrink-0 text-neutral-400 transition-transform duration-200"
-          :class="open ? 'rotate-180' : ''"
-        />
         <UiChip
           round
           size="sm"
@@ -76,9 +71,7 @@ async function submitCreateSpace() {
             <IconCheck
               :size="16"
               class="shrink-0"
-              :class="
-                s.id === currentSpace?.id ? 'text-blue-500' : 'opacity-0'
-              "
+              :class="s.id === currentSpace?.id ? 'text-blue-500' : 'opacity-0'"
             />
             <span
               class="truncate"
@@ -112,7 +105,11 @@ async function submitCreateSpace() {
     <form class="flex flex-col gap-4" @submit.prevent="submitCreateSpace">
       <label class="flex flex-col gap-1.5">
         <span class="text-sm text-neutral-500">Nom de l'espace</span>
-        <UiInput v-model="newSpaceName" required placeholder="Ex. Espace Client" />
+        <UiInput
+          v-model="newSpaceName"
+          required
+          placeholder="Ex. Espace Client"
+        />
       </label>
       <div class="mt-2 flex justify-end gap-3">
         <UiButton size="sm" elevation="sm" @click="modalRef?.close()">

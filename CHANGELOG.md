@@ -34,6 +34,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 - Table de test `health_check` (tâche 0.4), remplacée par le schéma métier de la tâche 1.1.
 
+### Deprecated
+
+- Le composant `app/components/layout/Sidebar.vue` est désormais obsolète : seul la Navbar sera utilisée pour la navigation.
+
 ## [0.0.1] - 2026-07-07
 
 ### Added

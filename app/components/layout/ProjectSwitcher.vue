@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { IconCheck, IconChevronDown, IconFolder, IconPlus } from "@tabler/icons-vue";
+import { IconCheck, IconPlus } from "@tabler/icons-vue";
 
 const { projects, currentProject, selectProject, createProject } =
   useCurrentProject();
@@ -53,21 +53,32 @@ async function submitCreateProject() {
 </script>
 
 <template>
-  <UiDropdown align="start">
+  <UiDropdown align="end">
     <template #trigger="{ open }">
-      <span
-        class="glass-surface glass-surface--elevation-sm flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-neutral-600"
+      <UiChip
+        size="sm"
+        elevation="sm"
+        class="!h-auto p-2 px-3 pr-2 gap-2 text-neutral-600"
       >
-        <IconFolder :size="18" class="shrink-0 text-blue-500" />
-        <span class="min-w-0 flex-1 truncate font-medium text-neutral-800">
+        <span class="min-w-0 flex-1 truncate text-neutral-600">
           {{ currentProject?.name ?? "Aucun projet" }}
         </span>
-        <IconChevronDown
-          :size="16"
-          class="shrink-0 text-neutral-400 transition-transform duration-200"
-          :class="open ? 'rotate-180' : ''"
-        />
-      </span>
+        <UiChip
+          round
+          size="sm"
+          elevation="sm"
+          class="w-8 h-8 shrink-0 text-white"
+        >
+          <UiRoundProgress
+            :value="100"
+            :size="22"
+            :stroke-width="3.5"
+            gradient-from="#BF00E5"
+            gradient-to="#D24DFF"
+            shadow-color="rgb(148,0,178, 0.2)"
+          />
+        </UiChip>
+      </UiChip>
     </template>
 
     <template #default="{ close }">
@@ -129,7 +140,7 @@ async function submitCreateProject() {
           placeholder="Ex. Refonte du portail"
         />
       </label>
-      <label class="flex flex-col gap-1.5">
+      <!-- <label class="flex flex-col gap-1.5">
         <span class="text-sm text-neutral-500">Thème</span>
         <select
           v-model="newProjectTheme"
@@ -143,7 +154,7 @@ async function submitCreateProject() {
             {{ opt.label }}
           </option>
         </select>
-      </label>
+      </label> -->
       <div class="mt-2 flex justify-end gap-3">
         <UiButton size="sm" elevation="sm" @click="modalRef?.close()">
           Annuler

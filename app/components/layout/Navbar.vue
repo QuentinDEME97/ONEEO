@@ -81,7 +81,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <header class="navbar w-full flex justify-between sticky top-0 z-30 p-4 pb-0">
+  <header
+    class="navbar w-full grid grid-cols-[1fr_auto_1fr] items-center sticky top-0 z-30 p-4 pb-0"
+  >
     <div class="flex items-center gap-2">
       <!-- glass-surface (et pas glass-control) : la navbar est statique, pas
            de brightness au survol ni de scale au clic. -->
@@ -115,7 +117,7 @@ onBeforeUnmount(() => {
     </div>
     <nav
       ref="navRef"
-      class="relative flex text-xl font-light w-fit items-center gap-6 px-4 py-2 glass-surface glass-surface--elevation-sm rounded-full"
+      class="relative flex text-xl font-light w-fit items-center gap-6 px-4 py-2 glass-surface glass-surface--elevation-sm rounded-full justify-self-center"
     >
       <span
         aria-hidden="true"
@@ -139,7 +141,10 @@ onBeforeUnmount(() => {
     </nav>
     <!-- Sélecteur d'espace (dropdown verre) — le contenu de l'ancienne chip
          statique vit maintenant dans LayoutSpaceSwitcher. -->
-    <LayoutSpaceSwitcher />
+    <div class="swicthers gap-2 flex items-center justify-self-end">
+      <LayoutSpaceSwitcher />
+      <LayoutProjectSwitcher />
+    </div>
   </header>
 </template>
 
