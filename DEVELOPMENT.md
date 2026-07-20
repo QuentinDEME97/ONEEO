@@ -223,12 +223,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.9 — Projets : CRUD + sélecteur + thème
 
-- [ ] **Objectif** : gérer et changer de projet, appliquer son thème.
+- [x] **Objectif** : gérer et changer de projet, appliquer son thème.
 - **Fichiers** : `server/api/projects/*`, `app/components/layout/ProjectSwitcher.vue`.
 - **DoD** :
-  - [ ] Créer / lister les projets de l'espace ; sélecteur sidebar mémorisant le projet actif.
-  - [ ] Le thème du projet actif surcharge celui de l'espace.
+  - [x] Créer / lister les projets de l'espace ; sélecteur sidebar mémorisant le projet actif.
+  - [x] Le thème du projet actif surcharge celui de l'espace.
 - **Taille** : M · ⚠️ dép. 1.8.
+- **Note** : le projet actif est mémorisé en session (`UserSession.currentProjectId`), `resolveRequestContext()` le résout désormais (cadré à l'espace, repli sur le premier projet, 403 sur un projet étranger). Le sélecteur (`ProjectSwitcher.vue`) vit dans la sidebar sous le sélecteur d'espace ; sa modale de création permet de choisir le thème. Le `data-theme` de `app.vue` applique la surcharge projet → espace → `oneeo`.
 
 ### 1.10 — Page profil
 

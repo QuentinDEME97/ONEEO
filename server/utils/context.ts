@@ -8,7 +8,7 @@ interface RequestContext {
 
 export async function resolveRequestContext(
   event: H3Event,
-  opts: { spaceId?: string } = {}
+  opts: { spaceId?: string; projectId?: string } = {}
 ): Promise<RequestContext> {
   const session = await getUserSession(event);
   const { user } = session;
@@ -48,8 +48,37 @@ export async function resolveRequestContext(
     });
   }
 
-  logger.debug({ userId: user.id, spaceId }, "contexte résolu");
+  // Projet actif : cadré à l'espace résolu ci-dessus. On lit en priorité un
+  // `projectId` explicite (ex. `POST /api/projects/[id]/select`), sinon celui
+  // mémorisé en session, avec repli sur le premier projet de l'espace. Un
+  // `projectId` appartenant à un autre espace est rejeté (403) ; un espace sans
+  // projet laisse `projectId` à `null`.
+  const projects = await db.query.project.findMany({
+    where: (p, { eq }) => eq(p.spaceId, spaceId),
+  });
 
-  // La table `project` n'existe pas encore (tâche 1.8) — toujours nul pour l'instant.
-  return { userId: user.id, spaceId, projectId: null };
+  let projectId: string | null;
+  if (opts.projectId !== undefined) {
+    if (!projects.some((p) => p.id === opts.projectId)) {
+      logger.warn(
+        { userId: user.id, spaceId, projectId: opts.projectId },
+        "contexte : accès au projet refusé"
+      );
+      throw createError({
+        statusCode: 403,
+        statusMessage: "Accès à ce projet refusé.",
+      });
+    }
+    projectId = opts.projectId;
+  } else {
+    const sessionProjectId = session.currentProjectId;
+    projectId =
+      projects.find((p) => p.id === sessionProjectId)?.id ??
+      projects[0]?.id ??
+      null;
+  }
+
+  logger.debug({ userId: user.id, spaceId, projectId }, "contexte résolu");
+
+  return { userId: user.id, spaceId, projectId };
 }

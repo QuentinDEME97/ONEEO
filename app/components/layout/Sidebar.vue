@@ -67,6 +67,10 @@ const isActive = (path: string, exact: boolean) => {
 
         <LayoutSpaceSwitcher />
 
+        <div class="mt-3">
+          <LayoutProjectSwitcher />
+        </div>
+
         <p
           class="mb-2 mt-6 px-3 text-[11px] font-semibold tracking-[0.2em] text-neutral-400"
         >
