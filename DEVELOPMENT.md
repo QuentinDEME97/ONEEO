@@ -233,12 +233,13 @@ But : se connecter, créer un espace et un projet, gérer son profil.
 
 ### 1.10 — Page profil
 
-- [ ] **Objectif** : éditer son profil et son mot de passe.
+- [x] **Objectif** : éditer son profil et son mot de passe.
 - **Fichiers** : `app/pages/parametres/profil.vue`, `server/api/me/*`.
 - **DoD** :
-  - [ ] Modifier nom/prénom, email, avatar (upload → `data/avatars`, chemin en base).
-  - [ ] Changer de mot de passe (avec vérification de l'ancien).
+  - [x] Modifier nom/prénom, email, avatar (upload → `data/avatars`, chemin en base).
+  - [x] Changer de mot de passe (avec vérification de l'ancien).
 - **Taille** : M · ⚠️ dép. 1.4 · ❓ stockage avatar.
+- **Note** : stockage avatar tranché en **fichier sur disque** (`data/avatars`, chemin en base — pas de base64), servi par `server/routes/avatars/[file].get.ts` (réservé aux connectés, `basename` anti-traversée). L'endpoint `POST /api/auth/set-password` (créé en 1.7 pour le changement forcé, sans ancien mot de passe) reste distinct de `POST /api/me/password` (profil, **avec** vérification de l'ancien) : les deux flux ont des exigences différentes. `User.avatarPath` ajouté à la session et menu utilisateur (avatar → profil/déconnexion) branché dans la Navbar — le placeholder `_logout` de la tâche 0.7 est enfin câblé.
 
 ---
 

@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { IconCircle } from "@tabler/icons-vue";
-const { clear } = useUserSession();
+import { IconCircle, IconLogout, IconUser } from "@tabler/icons-vue";
+const { user, clear } = useUserSession();
 
-// Préfixé `_` en attendant d'être rebranché sur le futur menu utilisateur
-// (règle lint no-unused-vars).
-const _logout = async () => {
+const logout = async () => {
   await clear();
   await navigateTo("/login");
 };
+
+const userInitials = computed(() =>
+  `${user.value?.firstName?.[0] ?? ""}${user.value?.lastName?.[0] ?? ""}`.toUpperCase()
+);
 
 const navItems = [
   { to: "/", label: "Dashboard", exact: true },
@@ -144,6 +146,55 @@ onBeforeUnmount(() => {
     <div class="swicthers gap-2 flex items-center justify-self-end">
       <LayoutSpaceSwitcher />
       <LayoutProjectSwitcher />
+
+      <!-- Menu utilisateur : avatar (ou initiales) → profil / déconnexion. -->
+      <UiDropdown align="end">
+        <template #trigger>
+          <UiChip
+            v-if="!user?.avatarPath"
+            round
+            size="sm"
+            elevation="sm"
+            class="text-xs font-semibold text-neutral-700"
+          >
+            {{ userInitials }}
+          </UiChip>
+          <img
+            v-else
+            :src="user.avatarPath"
+            alt="Avatar"
+            class="h-9 w-9 rounded-full object-cover"
+          />
+        </template>
+
+        <template #default="{ close }">
+          <ul class="flex flex-col gap-1" role="none">
+            <li role="none">
+              <NuxtLink
+                to="/parametres/profil"
+                role="menuitem"
+                class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-neutral-600 transition-colors hover:bg-white/70"
+                @click="close"
+              >
+                <IconUser :size="16" class="shrink-0" />
+                Mon profil
+              </NuxtLink>
+            </li>
+            <li class="my-1 border-t border-white/70" role="none" />
+            <li role="none">
+              <button
+                type="button"
+                role="menuitem"
+                class="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-neutral-600 transition-colors hover:bg-white/70"
+                @click="logout"
+              >
+                <IconLogout :size="16" class="shrink-0" />
+                Déconnexion
+              </button>
+            </li>
+          </ul>
+        </template>
+      </UiDropdown>
     </div>
   </header>
 </template>

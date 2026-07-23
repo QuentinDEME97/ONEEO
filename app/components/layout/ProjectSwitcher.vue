@@ -7,7 +7,7 @@ const { projects, currentProject, selectProject, createProject } =
 // Thèmes DaisyUI proposés à la création. « (hérité) » = pas de surcharge, le
 // projet reprend le thème de l'espace. Tous les thèmes DaisyUI sont activés
 // (`themes: all` dans main.css), on en expose une sélection représentative.
-const THEME_OPTIONS = [
+const _THEME_OPTIONS = [
   { value: "", label: "Hérité de l'espace" },
   { value: "oneeo", label: "Oneeo" },
   { value: "light", label: "Light" },
@@ -54,7 +54,7 @@ async function submitCreateProject() {
 
 <template>
   <UiDropdown align="end">
-    <template #trigger="{ open }">
+    <template #trigger>
       <UiChip
         size="sm"
         elevation="sm"
@@ -147,7 +147,7 @@ async function submitCreateProject() {
           class="glass-surface glass-surface--elevation-sm h-11 rounded-xl px-4 text-base text-neutral-800"
         >
           <option
-            v-for="opt in THEME_OPTIONS"
+            v-for="opt in _THEME_OPTIONS"
             :key="opt.value"
             :value="opt.value"
           >

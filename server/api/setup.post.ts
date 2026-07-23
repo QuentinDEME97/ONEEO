@@ -65,6 +65,7 @@ export default defineEventHandler(async (event) => {
       email: created.user.email,
       firstName: created.user.firstName,
       lastName: created.user.lastName,
+      avatarPath: created.user.avatarPath,
       mustChangePassword: created.user.mustChangePassword,
     },
   });

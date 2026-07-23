@@ -60,6 +60,7 @@ export default defineEventHandler(async (event) => {
         email: userRecord.email,
         firstName: userRecord.firstName,
         lastName: userRecord.lastName,
+        avatarPath: userRecord.avatarPath,
         mustChangePassword: userRecord.mustChangePassword,
       },
       rememberMe,

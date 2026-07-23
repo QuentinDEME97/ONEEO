@@ -26,3 +26,6 @@ logs
 # SQLite database (générée localement par db:migrate)
 /data/*.sqlite*
 !/data/.gitkeep
+
+# Avatars uploadés (stockés sur disque, chemin en base)
+/data/avatars

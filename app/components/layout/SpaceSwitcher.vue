@@ -34,7 +34,7 @@ async function submitCreateSpace() {
 <template>
   <UiDropdown align="end">
     <!-- Déclencheur : la chip espace de la navbar (texte + anneau bleu). -->
-    <template #trigger="{ open }">
+    <template #trigger>
       <UiChip
         size="sm"
         elevation="sm"
